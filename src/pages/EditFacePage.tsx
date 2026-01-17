@@ -1,0 +1,234 @@
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Container, Row, Col } from 'react-bootstrap';
+import { Button } from '../components/radix/Button';
+import { FormField } from '../components/radix/FormField';
+import { Input } from '../components/radix/Input';
+import { useLocalizedLink } from '../hooks/useLocalizedLink';
+import { useFace } from '../hooks/api/useFacesApi';
+import { updateFace } from '../hooks/api/useFacesApi';
+import { toast } from 'react-toastify';
+import './FaceFormPage.scss';
+
+interface EditFaceFormData {
+  index: string;
+  title: string;
+  description?: string;
+  color?: string;
+}
+
+export function EditFacePage() {
+  const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation('common');
+  const navigate = useNavigate();
+  const getLocalizedPath = useLocalizedLink();
+  const queryClient = useQueryClient();
+
+  const faceId = id ? parseInt(id, 10) : 0;
+  const { data: face, isLoading, error } = useFace(faceId);
+
+  // Validation schema
+  const validationSchema = yup.object({
+    index: yup
+      .string()
+      .required(t('pages.editFace.validation.indexRequired'))
+      .max(100, t('pages.editFace.validation.indexMaxLength')),
+    title: yup
+      .string()
+      .required(t('pages.editFace.validation.titleRequired'))
+      .max(200, t('pages.editFace.validation.titleMaxLength')),
+    description: yup
+      .string()
+      .optional()
+      .max(1000, t('pages.editFace.validation.descriptionMaxLength')),
+    color: yup.string().optional().max(50, t('pages.editFace.validation.colorMaxLength')),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<EditFaceFormData>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      index: '',
+      title: '',
+      description: '',
+      color: '',
+    },
+  });
+
+  // Reset form when face data loads
+  useEffect(() => {
+    if (face) {
+      reset({
+        index: face.index || '',
+        title: face.title || '',
+        description: face.description || '',
+        color: face.color || '',
+      });
+    }
+  }, [face, reset]);
+
+  const updateFaceMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<EditFaceFormData> }) =>
+      updateFace(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['faces'] });
+      queryClient.invalidateQueries({ queryKey: ['face', faceId] });
+      toast.success(t('pages.editFace.success'));
+      navigate(getLocalizedPath('/faces'));
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || t('pages.editFace.error'));
+    },
+  });
+
+  const onSubmit = async (data: EditFaceFormData) => {
+    if (!faceId) return;
+    updateFaceMutation.mutate({ id: faceId, data });
+  };
+
+  if (isLoading) {
+    return (
+      <div
+        className="face-form-page-wrapper"
+        style={{
+          marginLeft: 'var(--sidebar-width, 250px)',
+          padding: '2rem',
+          transition: 'margin-left 0.3s ease',
+        }}
+      >
+        <Container fluid>
+          <div className="face-form-loading">
+            <p>{t('pages.editFace.loading')}</p>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (error || !face) {
+    return (
+      <div
+        className="face-form-page-wrapper"
+        style={{
+          marginLeft: 'var(--sidebar-width, 250px)',
+          padding: '2rem',
+          transition: 'margin-left 0.3s ease',
+        }}
+      >
+        <Container fluid>
+          <div className="face-form-error">
+            <p>{t('pages.editFace.error')}</p>
+            <Button onClick={() => navigate(getLocalizedPath('/faces'))}>{t('common.back')}</Button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="face-form-page-wrapper"
+      style={{
+        marginLeft: 'var(--sidebar-width, 250px)',
+        padding: '2rem',
+        transition: 'margin-left 0.3s ease',
+      }}
+    >
+      <Container fluid>
+        <div className="face-form-content">
+          <div className="face-form-header">
+            <Button
+              variant="outline"
+              onClick={() => navigate(getLocalizedPath('/faces'))}
+              className="back-button"
+            >
+              ← {t('common.back')}
+            </Button>
+            <h1>{t('pages.editFace.title')}</h1>
+          </div>
+
+          <div className="face-form-card">
+            <form onSubmit={handleSubmit(onSubmit)} className="face-form">
+              <Row>
+                <Col xs={12} md={6}>
+                  <FormField
+                    label={t('pages.editFace.index')}
+                    error={errors.index?.message}
+                    required
+                  >
+                    <Input
+                      type="text"
+                      {...register('index')}
+                      placeholder={t('pages.editFace.indexPlaceholder')}
+                      disabled={isSubmitting}
+                    />
+                  </FormField>
+                </Col>
+                <Col xs={12} md={6}>
+                  <FormField
+                    label={t('pages.editFace.title')}
+                    error={errors.title?.message}
+                    required
+                  >
+                    <Input
+                      type="text"
+                      {...register('title')}
+                      placeholder={t('pages.editFace.titlePlaceholder')}
+                      disabled={isSubmitting}
+                    />
+                  </FormField>
+                </Col>
+                <Col xs={12}>
+                  <FormField
+                    label={t('pages.editFace.description')}
+                    error={errors.description?.message}
+                  >
+                    <Input
+                      type="text"
+                      {...register('description')}
+                      placeholder={t('pages.editFace.descriptionPlaceholder')}
+                      disabled={isSubmitting}
+                    />
+                  </FormField>
+                </Col>
+                <Col xs={12} md={6}>
+                  <FormField label={t('pages.editFace.color')} error={errors.color?.message}>
+                    <Input
+                      type="text"
+                      {...register('color')}
+                      placeholder={t('pages.editFace.colorPlaceholder')}
+                      disabled={isSubmitting}
+                    />
+                  </FormField>
+                </Col>
+              </Row>
+
+              <div className="face-form-actions">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate(getLocalizedPath('/faces'))}
+                  disabled={isSubmitting}
+                >
+                  {t('common.cancel')}
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? t('pages.editFace.submitting') : t('pages.editFace.submit')}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </Container>
+    </div>
+  );
+}

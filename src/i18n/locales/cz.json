@@ -1,0 +1,274 @@
+{
+  "welcome": "Vítejte ve Vite + React",
+  "count": "počet je {{count}}",
+  "edit": "Upravit",
+  "save": "uložit pro testování HMR",
+  "clickLogos": "Klikněte na loga Vite a React, abyste se dozvěděli více",
+  "viteLogo": "Vite logo",
+  "reactLogo": "React logo",
+  "routes": {
+    "login": "prihlaseni",
+    "homepage": "domov",
+    "users": "uzivatele",
+    "faces": "tvare"
+  },
+  "pages": {
+    "login": {
+      "title": "Přihlášení",
+      "email": "Email",
+      "password": "Heslo",
+      "submit": "Přihlásit se",
+      "submitting": "Přihlašuji...",
+      "success": "Přihlášení úspěšné!",
+      "error": "Přihlášení selhalo. Zkontrolujte své přihlašovací údaje.",
+      "validation": {
+        "emailRequired": "Email je povinný",
+        "emailInvalid": "Zadejte platnou emailovou adresu",
+        "passwordRequired": "Heslo je povinné",
+        "passwordMinLength": "Heslo musí mít alespoň 4 znaky"
+      }
+    },
+    "homepage": {
+      "title": "Vítejte ve Vašem Dashboardu",
+      "welcome": "Vítejte",
+      "description": "Toto je chráněná stránka. Pouze přihlášení uživatelé k ní mají přístup."
+    },
+    "users": {
+      "title": "Uživatelé"
+    },
+    "faces": {
+      "title": "Tváře",
+      "loading": "Načítám tváře...",
+      "error": "Chyba při načítání tváří",
+      "searchPlaceholder": "Hledat tváře...",
+      "create": "Vytvořit tvář",
+      "faces": "tváří",
+      "noFaces": "Žádné tváře nenalezeny"
+    },
+    "faceDetail": {
+      "title": "Detail tváře",
+      "loading": "Načítám detail tváře...",
+      "error": "Chyba při načítání detailu tváře",
+      "notFound": "Tvář nebyla nalezena",
+      "id": "ID",
+      "index": "Index",
+      "title": "Název",
+      "description": "Popis",
+      "color": "Barva",
+      "createdAt": "Vytvořena",
+      "updatedAt": "Aktualizována"
+    },
+    "createFace": {
+      "title": "Vytvořit tvář",
+      "index": "Index",
+      "indexPlaceholder": "Zadejte index",
+      "title": "Název",
+      "titlePlaceholder": "Zadejte název",
+      "description": "Popis",
+      "descriptionPlaceholder": "Zadejte popis",
+      "color": "Barva",
+      "colorPlaceholder": "Zadejte barvu (např. #ff0000)",
+      "submit": "Vytvořit tvář",
+      "submitting": "Vytvářím...",
+      "success": "Tvář byla úspěšně vytvořena!",
+      "error": "Chyba při vytváření tváře",
+      "validation": {
+        "indexRequired": "Index je povinný",
+        "indexMaxLength": "Index musí mít nejvýše 100 znaků",
+        "titleRequired": "Název je povinný",
+        "titleMaxLength": "Název musí mít nejvýše 200 znaků",
+        "descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků",
+        "colorMaxLength": "Barva musí mít nejvýše 50 znaků"
+      }
+    },
+    "editFace": {
+      "title": "Upravit tvář",
+      "index": "Index",
+      "indexPlaceholder": "Zadejte index",
+      "title": "Název",
+      "titlePlaceholder": "Zadejte název",
+      "description": "Popis",
+      "descriptionPlaceholder": "Zadejte popis",
+      "color": "Barva",
+      "colorPlaceholder": "Zadejte barvu (např. #ff0000)",
+      "submit": "Aktualizovat tvář",
+      "submitting": "Aktualizuji...",
+      "loading": "Načítám tvář...",
+      "success": "Tvář byla úspěšně aktualizována!",
+      "error": "Chyba při aktualizaci tváře",
+      "validation": {
+        "indexRequired": "Index je povinný",
+        "indexMaxLength": "Index musí mít nejvýše 100 znaků",
+        "titleRequired": "Název je povinný",
+        "titleMaxLength": "Název musí mít nejvýše 200 znaků",
+        "descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků",
+        "colorMaxLength": "Barva musí mít nejvýše 50 znaků"
+      }
+    },
+    "pagesTable": {
+      "title": "Stránky",
+      "loading": "Načítám stránky...",
+      "error": "Chyba při načítání stránek",
+      "create": "Vytvořit stránku",
+      "noPages": "Žádné stránky nenalezeny",
+      "deleteSuccess": "Stránka byla úspěšně smazána!",
+      "deleteError": "Chyba při mazání stránky",
+      "confirmDelete": "Opravdu chcete smazat tuto stránku?"
+    },
+    "pageDetail": {
+      "title": "Detail stránky",
+      "loading": "Načítám detail stránky...",
+      "error": "Chyba při načítání detailu stránky",
+      "notFound": "Stránka nebyla nalezena",
+      "id": "ID",
+      "name": "Název",
+      "description": "Popis",
+      "path": "Cesta",
+      "index": "Index",
+      "createdAt": "Vytvořena",
+      "updatedAt": "Aktualizována"
+    },
+    "createPage": {
+      "title": "Vytvořit stránku",
+      "pageType": "Typ stránky",
+      "name": "Název",
+      "namePlaceholder": "Zadejte název stránky",
+      "description": "Popis",
+      "descriptionPlaceholder": "Zadejte popis",
+      "path": "Cesta",
+      "pathPlaceholder": "Zadejte cestu (např. /home)",
+      "index": "Index",
+      "indexPlaceholder": "Zadejte index (0, 1, 2...)",
+      "submit": "Vytvořit stránku",
+      "submitting": "Vytvářím...",
+      "success": "Stránka byla úspěšně vytvořena!",
+      "error": "Chyba při vytváření stránky",
+      "validation": {
+        "pageTypeIdRequired": "Typ stránky je povinný",
+        "nameRequired": "Název je povinný",
+        "nameMaxLength": "Název musí mít nejvýše 200 znaků",
+        "descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků",
+        "pathRequired": "Cesta je povinná",
+        "pathMaxLength": "Cesta musí mít nejvýše 500 znaků",
+        "indexRequired": "Index je povinný",
+        "indexMin": "Index musí být 0 nebo větší"
+      }
+    },
+    "editPage": {
+      "title": "Upravit stránku",
+      "pageType": "Typ stránky",
+      "name": "Název",
+      "namePlaceholder": "Zadejte název stránky",
+      "description": "Popis",
+      "descriptionPlaceholder": "Zadejte popis",
+      "path": "Cesta",
+      "pathPlaceholder": "Zadejte cestu (např. /home)",
+      "index": "Index",
+      "indexPlaceholder": "Zadejte index (0, 1, 2...)",
+      "submit": "Aktualizovat stránku",
+      "submitting": "Aktualizuji...",
+      "loading": "Načítám stránku...",
+      "success": "Stránka byla úspěšně aktualizována!",
+      "error": "Chyba při aktualizaci stránky",
+      "validation": {
+        "pageTypeIdRequired": "Typ stránky je povinný",
+        "nameRequired": "Název je povinný",
+        "nameMaxLength": "Název musí mít nejvýše 200 znaků",
+        "descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků",
+        "pathRequired": "Cesta je povinná",
+        "pathMaxLength": "Cesta musí mít nejvýše 500 znaků",
+        "indexRequired": "Index je povinný",
+        "indexMin": "Index musí být 0 nebo větší"
+      }
+    },
+    "userDetail": {
+      "title": "Detail uživatele",
+      "loading": "Načítám detail uživatele...",
+      "error": "Chyba při načítání detailu uživatele",
+      "notFound": "Uživatel nebyl nalezen",
+      "id": "ID",
+      "email": "Email",
+      "firstName": "Jméno",
+      "lastName": "Příjmení",
+      "createdAt": "Vytvořen"
+    },
+    "createUser": {
+      "title": "Vytvořit uživatele",
+      "email": "Email",
+      "emailPlaceholder": "Zadejte emailovou adresu",
+      "password": "Heslo",
+      "passwordPlaceholder": "Zadejte heslo",
+      "confirmPassword": "Potvrďte heslo",
+      "confirmPasswordPlaceholder": "Potvrďte heslo",
+      "firstName": "Jméno",
+      "firstNamePlaceholder": "Zadejte jméno",
+      "lastName": "Příjmení",
+      "lastNamePlaceholder": "Zadejte příjmení",
+      "submit": "Vytvořit uživatele",
+      "submitting": "Vytvářím...",
+      "success": "Uživatel byl úspěšně vytvořen!",
+      "error": "Chyba při vytváření uživatele",
+      "validation": {
+        "emailRequired": "Email je povinný",
+        "emailInvalid": "Zadejte platnou emailovou adresu",
+        "passwordRequired": "Heslo je povinné",
+        "passwordMinLength": "Heslo musí mít alespoň 4 znaky",
+        "confirmPasswordRequired": "Prosím potvrďte heslo",
+        "passwordsMatch": "Hesla se musí shodovat"
+      }
+    },
+    "editUser": {
+      "title": "Upravit uživatele",
+      "email": "Email",
+      "emailPlaceholder": "Zadejte emailovou adresu",
+      "password": "Heslo",
+      "passwordPlaceholder": "Ponechte prázdné pro zachování aktuálního hesla",
+      "passwordHelp": "Ponechte prázdné pro zachování aktuálního hesla",
+      "confirmPassword": "Potvrďte heslo",
+      "confirmPasswordPlaceholder": "Potvrďte nové heslo",
+      "firstName": "Jméno",
+      "firstNamePlaceholder": "Zadejte jméno",
+      "lastName": "Příjmení",
+      "lastNamePlaceholder": "Zadejte příjmení",
+      "submit": "Aktualizovat uživatele",
+      "submitting": "Aktualizuji...",
+      "loading": "Načítám uživatele...",
+      "success": "Uživatel byl úspěšně aktualizován!",
+      "error": "Chyba při aktualizaci uživatele",
+      "validation": {
+        "emailRequired": "Email je povinný",
+        "emailInvalid": "Zadejte platnou emailovou adresu",
+        "passwordMinLength": "Heslo musí mít alespoň 4 znaky",
+        "confirmPasswordRequired": "Prosím potvrďte heslo",
+        "passwordsMatch": "Hesla se musí shodovat"
+      }
+    },
+    "logout": {
+      "successMessage": "Odhlášení úspěšné",
+      "errorMessage": "Odhlášení selhalo. Zkuste to znovu."
+    }
+  },
+  "common": {
+    "back": "Zpět",
+    "cancel": "Zrušit",
+    "edit": "Upravit",
+    "actions": "Akce",
+    "refresh": "Obnovit",
+    "retry": "Zkusit znovu",
+    "showing": "Zobrazuje se",
+    "to": "do",
+    "of": "z",
+    "page": "Strana",
+    "first": "První",
+    "previous": "Předchozí",
+    "next": "Další",
+    "last": "Poslední",
+    "delete": "Smazat"
+  },
+  "language": {
+    "select": "Vyberte jazyk",
+    "en": "Angličtina",
+    "sk": "Slovenština",
+    "cz": "Čeština"
+  }
+}
