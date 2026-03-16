@@ -11,7 +11,8 @@
 		"homepage": "domov",
 		"dashboard": "nastenka",
 		"users": "pouzivatelia",
-		"faces": "tvare"
+		"faces": "tvare",
+		"chat": "chat"
 	},
 	"pages": {
 		"login": {
@@ -40,7 +41,9 @@
 			"description": "Prehľad admin panela. Spravujte používateľov, tvare a obsah.",
 			"quickActions": "Rýchle akcie",
 			"manageUsers": "Správa používateľov",
-			"manageFaces": "Správa tvárí"
+			"manageFaces": "Správa tvárí",
+			"friendRequests": "Žiadosti o priateľstvo (čakajúce)",
+			"messages": "Správy"
 		},
 		"users": {
 			"title": "Používatelia"
@@ -354,6 +357,17 @@
 			"title": "Odhlásiť",
 			"successMessage": "Odhlásenie úspešné",
 			"errorMessage": "Odhlásenie zlyhalo. Skúste to znova."
+		},
+		"chat": {
+			"title": "AI Chat",
+			"placeholder": "Napíšte správu...",
+			"send": "Odoslať",
+			"connecting": "Pripájanie...",
+			"connected": "Pripojený",
+			"disconnected": "Odpojený",
+			"you": "Vy",
+			"ai": "AI",
+			"timeoutError": "Vypršal čas požiadavky. AI sa ešte môže načítavať. Skúste znova o minútu."
 		}
 	},
 	"common": {

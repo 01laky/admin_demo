@@ -11,7 +11,8 @@
 		"homepage": "homepage",
 		"dashboard": "dashboard",
 		"users": "users",
-		"faces": "faces"
+		"faces": "faces",
+		"chat": "chat"
 	},
 	"pages": {
 		"login": {
@@ -40,7 +41,9 @@
 			"description": "Admin panel overview. Manage your users, faces and content.",
 			"quickActions": "Quick Actions",
 			"manageUsers": "Manage Users",
-			"manageFaces": "Manage Faces"
+			"manageFaces": "Manage Faces",
+			"friendRequests": "Friend requests (pending)",
+			"messages": "Messages"
 		},
 		"users": {
 			"title": "Users"
@@ -354,6 +357,17 @@
 			"title": "Logout",
 			"successMessage": "Logged out successfully",
 			"errorMessage": "Logout failed. Please try again."
+		},
+		"chat": {
+			"title": "AI Chat",
+			"placeholder": "Type a message...",
+			"send": "Send",
+			"connecting": "Connecting...",
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"you": "You",
+			"ai": "AI",
+			"timeoutError": "Request timed out. The AI may still be loading. Please try again in a minute."
 		}
 	},
 	"common": {

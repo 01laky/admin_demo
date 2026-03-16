@@ -28,6 +28,7 @@ const NAV_ITEMS: NavItem[] = [
 	{ path: '/dashboard', labelKey: 'pages.dashboard.title', icon: '📊' },
 	{ path: '/users', labelKey: 'pages.users.title', icon: '👥' },
 	{ path: '/faces', labelKey: 'pages.faces.title', icon: '😀' },
+	{ path: '/chat', labelKey: 'pages.chat.title', icon: '💬' },
 ];
 
 const DESKTOP_BREAKPOINT = 1024;

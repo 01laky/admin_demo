@@ -3,18 +3,20 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useLocalizedLink } from '../hooks/useLocalizedLink';
+import { useStats } from '../hooks/api/useStatsApi';
 import './DashboardPage.scss';
 
 export function DashboardPage() {
 	const { user } = useAuth();
 	const { t } = useTranslation('common');
 	const getLocalizedPath = useLocalizedLink();
+	const { data: statsData, isLoading: statsLoading } = useStats();
 
 	const stats = [
 		{
 			icon: '👥',
 			label: t('pages.users.title'),
-			value: '—',
+			value: statsLoading ? '…' : (statsData?.usersCount ?? '—'),
 			link: '/users',
 			color: '#3b82f6',
 		},
@@ -24,6 +26,20 @@ export function DashboardPage() {
 			value: '—',
 			link: '/faces',
 			color: '#8b5cf6',
+		},
+		{
+			icon: '📩',
+			label: t('pages.dashboard.friendRequests'),
+			value: statsLoading ? '…' : (statsData?.friendRequestsCount ?? '—'),
+			link: '/users',
+			color: '#f59e0b',
+		},
+		{
+			icon: '💬',
+			label: t('pages.dashboard.messages'),
+			value: statsLoading ? '…' : (statsData?.messagesCount ?? '—'),
+			link: '/chat',
+			color: '#10b981',
 		},
 	];
 

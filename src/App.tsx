@@ -38,6 +38,7 @@ import { EditFacePage } from './pages/EditFacePage';
 import { CreatePagePage } from './pages/CreatePagePage';
 import { EditPagePage } from './pages/EditPagePage';
 import { PageDetailPage } from './pages/PageDetailPage';
+import { ChatPage } from './pages/ChatPage';
 import { logger } from './utils/logger';
 import { supportedLanguages } from './i18n/config';
 import { getAllRouteTranslations } from './utils/routeTranslations';
@@ -76,6 +77,7 @@ function AppContent() {
 	const homepagePaths = getRoutePaths('homepage');
 	const usersPaths = getRoutePaths('users');
 	const facesPaths = getRoutePaths('faces');
+	const chatPaths = getRoutePaths('chat');
 
 	/**
 	 * Wraps a page component with AdminLayout (sidebar + header) when authenticated.
@@ -250,6 +252,17 @@ function AppContent() {
 							<ProtectedRoute redirectTo="login">{withLayout(<EditPagePage />)}</ProtectedRoute>
 						}
 					/>
+
+					{/* Chat route */}
+					{chatPaths.map((path) => (
+						<Route
+							key={path}
+							path={path}
+							element={
+								<ProtectedRoute redirectTo="login">{withLayout(<ChatPage />)}</ProtectedRoute>
+							}
+						/>
+					))}
 
 					{/* 
             Catch-all route for invalid paths within language context
