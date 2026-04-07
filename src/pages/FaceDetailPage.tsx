@@ -72,6 +72,12 @@ export function FaceDetailPage() {
 						<Button onClick={() => navigate(getLocalizedPath(`/faces/${faceId}/edit`))}>
 							{t('common.edit')}
 						</Button>
+						<Button
+							variant="outline"
+							onClick={() => navigate(getLocalizedPath(`/faces/${faceId}/wall-tickets`))}
+						>
+							{t('pages.faceDetail.wallTickets')}
+						</Button>
 					</div>
 
 					<div className="face-detail-card">

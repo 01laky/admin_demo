@@ -33,6 +33,7 @@ import { CreateUserPage } from './pages/CreateUserPage';
 import { EditUserPage } from './pages/EditUserPage';
 import { FacesPage } from './pages/FacesPage';
 import { FaceDetailPage } from './pages/FaceDetailPage';
+import { FaceWallTicketsPage } from './pages/FaceWallTicketsPage';
 import { CreateFacePage } from './pages/CreateFacePage';
 import { EditFacePage } from './pages/EditFacePage';
 import { CreatePagePage } from './pages/CreatePagePage';
@@ -225,6 +226,18 @@ function AppContent() {
 							path={`${path}/:id/edit`}
 							element={
 								<ProtectedRoute redirectTo="login">{withLayout(<EditFacePage />)}</ProtectedRoute>
+							}
+						/>
+					))}
+
+					{facesPaths.map((path) => (
+						<Route
+							key={`${path}/:id/wall-tickets`}
+							path={`${path}/:id/wall-tickets`}
+							element={
+								<ProtectedRoute redirectTo="login">
+									{withLayout(<FaceWallTicketsPage />)}
+								</ProtectedRoute>
 							}
 						/>
 					))}
