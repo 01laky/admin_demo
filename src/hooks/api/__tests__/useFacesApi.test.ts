@@ -76,6 +76,24 @@ describe('useFacesApi', () => {
 			expect(result).toEqual(updatedFace);
 			expect(mockRequest).toHaveBeenCalled();
 		});
+
+		it('should pass chatRoomsCreate in update body for API parity', async () => {
+			const updateData: UpdateFaceData = {
+				chatRoomsCreate: true,
+			};
+			const updatedFace: Face = {
+				id: 2,
+				index: 'f',
+				title: 'T',
+				chatRoomsCreate: true,
+			};
+			mockRequest.mockResolvedValue(updatedFace);
+			const result = await updateFace(2, updateData);
+			expect(result.chatRoomsCreate).toBe(true);
+			expect(mockRequest).toHaveBeenCalled();
+			const opts = mockRequest.mock.calls[0][1] as { body: UpdateFaceData };
+			expect(opts.body.chatRoomsCreate).toBe(true);
+		});
 	});
 
 	describe('deleteFace', () => {

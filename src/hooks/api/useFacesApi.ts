@@ -15,6 +15,7 @@ export interface Face {
 	isPublic?: boolean;
 	visibility?: FaceVisibility;
 	allowRecensions?: boolean;
+	chatRoomsCreate?: boolean;
 	createdAt?: string;
 	updatedAt?: string | null;
 }
@@ -120,6 +121,7 @@ export interface CreateFaceData {
 	isPublic?: boolean;
 	visibility?: FaceVisibility;
 	allowRecensions?: boolean;
+	chatRoomsCreate?: boolean;
 }
 
 const createFaceRequest = async (data: CreateFaceData): Promise<Face> => {
@@ -153,6 +155,7 @@ export interface UpdateFaceData {
 	isPublic?: boolean;
 	visibility?: FaceVisibility;
 	allowRecensions?: boolean;
+	chatRoomsCreate?: boolean;
 }
 
 const updateFaceRequest = async (id: number, data: UpdateFaceData): Promise<Face> => {
