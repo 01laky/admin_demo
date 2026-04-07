@@ -32,6 +32,7 @@ export function FaceWallTicketsPage() {
 	const [loading, setLoading] = useState(true);
 	const [selected, setSelected] = useState<AdminWallTicketDetail | null>(null);
 	const [detailLoading, setDetailLoading] = useState(false);
+	const [actionBusy, setActionBusy] = useState(false);
 
 	const loadList = async () => {
 		if (!faceId) return;
@@ -44,8 +45,10 @@ export function FaceWallTicketsPage() {
 			const res = await adminListWallTickets(token, faceId, page, 20);
 			setItems(res.items);
 			setTotalPages(Math.max(1, res.totalPages));
-		} catch {
-			toast.error(t('pages.faceWallTickets.loadError'));
+		} catch (err) {
+			toast.error(
+				err instanceof Error && err.message ? err.message : t('pages.faceWallTickets.loadError')
+			);
 			setItems([]);
 		} finally {
 			setLoading(false);
@@ -63,8 +66,10 @@ export function FaceWallTicketsPage() {
 		try {
 			const d = await adminGetWallTicket(token, faceId, ticketId);
 			setSelected(d);
-		} catch {
-			toast.error(t('pages.faceWallTickets.loadError'));
+		} catch (err) {
+			toast.error(
+				err instanceof Error && err.message ? err.message : t('pages.faceWallTickets.loadError')
+			);
 		} finally {
 			setDetailLoading(false);
 		}
@@ -84,12 +89,17 @@ export function FaceWallTicketsPage() {
 	};
 
 	const act = async (fn: () => Promise<void>, okMsg: string) => {
+		setActionBusy(true);
 		try {
 			await fn();
 			toast.success(okMsg);
 			await refreshAll();
-		} catch {
-			toast.error(t('pages.faceWallTickets.actionError'));
+		} catch (err) {
+			toast.error(
+				err instanceof Error && err.message ? err.message : t('pages.faceWallTickets.actionError')
+			);
+		} finally {
+			setActionBusy(false);
 		}
 	};
 
@@ -132,6 +142,7 @@ export function FaceWallTicketsPage() {
 										<button
 											type="button"
 											className="btn btn-link btn-sm p-0"
+											disabled={actionBusy || detailLoading}
 											onClick={() => void openDetail(row.id)}
 										>
 											{row.title}
@@ -147,6 +158,7 @@ export function FaceWallTicketsPage() {
 											<>
 												<Button
 													variant="outline"
+													disabled={actionBusy}
 													onClick={() =>
 														void act(
 															() => adminApproveWallTicket(token!, faceId, row.id),
@@ -158,6 +170,7 @@ export function FaceWallTicketsPage() {
 												</Button>
 												<Button
 													variant="outline"
+													disabled={actionBusy}
 													onClick={() =>
 														void act(
 															() => adminDenyWallTicket(token!, faceId, row.id),
@@ -172,6 +185,7 @@ export function FaceWallTicketsPage() {
 										<Button
 											variant="outline"
 											className="text-danger"
+											disabled={actionBusy}
 											onClick={() => {
 												if (!window.confirm(t('pages.faceWallTickets.confirmDeleteTicket'))) return;
 												void act(
@@ -192,7 +206,11 @@ export function FaceWallTicketsPage() {
 
 			{totalPages > 1 && (
 				<div className="face-wall-tickets-page__pager">
-					<Button variant="outline" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+					<Button
+						variant="outline"
+						disabled={page <= 1 || actionBusy}
+						onClick={() => setPage((p) => p - 1)}
+					>
 						{t('pages.faceWallTickets.prev')}
 					</Button>
 					<span>
@@ -200,7 +218,7 @@ export function FaceWallTicketsPage() {
 					</span>
 					<Button
 						variant="outline"
-						disabled={page >= totalPages}
+						disabled={page >= totalPages || actionBusy}
 						onClick={() => setPage((p) => p + 1)}
 					>
 						{t('pages.faceWallTickets.next')}
@@ -214,7 +232,7 @@ export function FaceWallTicketsPage() {
 				<div className="face-wall-tickets-page__detail card mt-4 p-3">
 					<div className="d-flex justify-content-between align-items-start">
 						<h2 className="h5">{selected.title}</h2>
-						<Button variant="outline" onClick={() => setSelected(null)}>
+						<Button variant="outline" disabled={actionBusy} onClick={() => setSelected(null)}>
 							{t('pages.faceWallTickets.closeDetail')}
 						</Button>
 					</div>
@@ -234,6 +252,7 @@ export function FaceWallTicketsPage() {
 								<Button
 									variant="outline"
 									className="text-danger"
+									disabled={actionBusy}
 									onClick={() => {
 										if (!window.confirm(t('pages.faceWallTickets.confirmDeleteComment'))) return;
 										void act(

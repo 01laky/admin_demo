@@ -59,7 +59,7 @@ export function FacesTable() {
 			},
 			{
 				accessorKey: 'title',
-				header: t('pages.faceDetail.title'),
+				header: t('pages.faceDetail.faceTitle'),
 				enableSorting: true,
 				cell: (info) => info.getValue(),
 			},

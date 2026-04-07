@@ -1,4 +1,7 @@
 import { env } from '../../config/env';
+import { getApiErrorMessage } from '../../utils/apiErrorMessage';
+
+const REQ_FAILED = 'Request failed';
 
 async function authFetch(path: string, token: string, init?: RequestInit) {
   const res = await fetch(`${env.apiUrl}${path}`, {
@@ -65,7 +68,7 @@ export async function adminListWallTickets(
     `/api/admin/faces/${faceId}/wall-tickets?page=${page}&pageSize=${pageSize}`,
     token
   );
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
   return res.json() as Promise<AdminWallTicketListResponse>;
 }
 
@@ -75,7 +78,7 @@ export async function adminGetWallTicket(
   ticketId: number
 ): Promise<AdminWallTicketDetail> {
   const res = await authFetch(`/api/admin/faces/${faceId}/wall-tickets/${ticketId}`, token);
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
   return res.json() as Promise<AdminWallTicketDetail>;
 }
 
@@ -83,21 +86,21 @@ export async function adminApproveWallTicket(token: string, faceId: number, tick
   const res = await authFetch(`/api/admin/faces/${faceId}/wall-tickets/${ticketId}/approve`, token, {
     method: 'POST',
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
 }
 
 export async function adminDenyWallTicket(token: string, faceId: number, ticketId: number): Promise<void> {
   const res = await authFetch(`/api/admin/faces/${faceId}/wall-tickets/${ticketId}/deny`, token, {
     method: 'POST',
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
 }
 
 export async function adminDeleteWallTicket(token: string, faceId: number, ticketId: number): Promise<void> {
   const res = await authFetch(`/api/admin/faces/${faceId}/wall-tickets/${ticketId}`, token, {
     method: 'DELETE',
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
 }
 
 export async function adminDeleteWallTicketComment(
@@ -111,5 +114,5 @@ export async function adminDeleteWallTicketComment(
     token,
     { method: 'DELETE' }
   );
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
 }

@@ -23,6 +23,9 @@
 		"prepare": "husky"
 	},
 	"packageManager": "yarn@4.12.0",
+	"engines": {
+		"node": ">=22.14.0"
+	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.2",
 		"@microsoft/signalr": "^10.0.0",

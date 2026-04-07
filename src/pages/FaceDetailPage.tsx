@@ -68,7 +68,7 @@ export function FaceDetailPage() {
 						>
 							← {t('common.back')}
 						</Button>
-						<h1>{t('pages.faceDetail.title')}</h1>
+						<h1>{t('pages.faceDetail.pageHeading')}</h1>
 						<Button onClick={() => navigate(getLocalizedPath(`/faces/${faceId}/edit`))}>
 							{t('common.edit')}
 						</Button>
@@ -96,7 +96,7 @@ export function FaceDetailPage() {
 							</Col>
 							<Col xs={12} md={6}>
 								<div className="face-detail-field">
-									<label>{t('pages.faceDetail.title')}</label>
+									<label>{t('pages.faceDetail.faceTitle')}</label>
 									<p>{face.title}</p>
 								</div>
 							</Col>

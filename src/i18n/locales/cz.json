@@ -58,13 +58,13 @@
 			"noFaces": "Žádné tváře nenalezeny"
 		},
 		"faceDetail": {
-			"title": "Detail tváře",
+			"pageHeading": "Detail tváře",
 			"loading": "Načítám detail tváře...",
 			"error": "Chyba při načítání detailu tváře",
 			"notFound": "Tvář nebyla nalezena",
 			"id": "ID",
 			"index": "Index",
-			"title": "Název",
+			"faceTitle": "Název",
 			"description": "Popis",
 			"color": "Barva",
 			"isPublic": "Viditelnost",

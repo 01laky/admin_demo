@@ -58,13 +58,13 @@
 			"noFaces": "No faces found"
 		},
 		"faceDetail": {
-			"title": "Face Details",
+			"pageHeading": "Face details",
 			"loading": "Loading face details...",
 			"error": "Error loading face details",
 			"notFound": "Face not found",
 			"id": "ID",
 			"index": "Index",
-			"title": "Title",
+			"faceTitle": "Title",
 			"description": "Description",
 			"color": "Color",
 			"isPublic": "Visibility",
