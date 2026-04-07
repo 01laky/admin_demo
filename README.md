@@ -354,6 +354,7 @@ This admin panel is part of the `_mfai_demo` monorepo and integrates with:
 
 - **Backend API**: `be_demo` (ASP.NET Core)
 - **Database**: `db_demo` (PostgreSQL) - via backend
+- **Redis**: `redis_demo` - job queue via backend
 - **Frontend**: `fe_demo` (separate user-facing application)
 
 Use root-level scripts to manage all services:
