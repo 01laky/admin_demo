@@ -19,6 +19,7 @@
 			"title": "Přihlášení",
 			"email": "Email",
 			"password": "Heslo",
+			"rememberMe": "Zůstat trvale přihlášen",
 			"submit": "Přihlásit se",
 			"submitting": "Přihlašuji...",
 			"success": "Přihlášení úspěšné!",
@@ -66,7 +67,7 @@
 			"index": "Index",
 			"faceTitle": "Název",
 			"description": "Popis",
-			"color": "Barva",
+			"gradient": "Gradient",
 			"isPublic": "Viditelnost",
 			"public": "Veřejná",
 			"private": "Soukromá",
@@ -114,8 +115,6 @@
 			"titlePlaceholder": "Zadejte název",
 			"description": "Popis",
 			"descriptionPlaceholder": "Zadejte popis",
-			"color": "Barva",
-			"colorPlaceholder": "Zadejte barvu (např. #ff0000)",
 			"isPublic": "Veřejný přístup",
 			"isPublicHelp": "Přístupná bez přihlášení",
 			"submit": "Vytvořit tvář",
@@ -127,8 +126,7 @@
 				"indexMaxLength": "Index musí mít nejvýše 100 znaků",
 				"titleRequired": "Název je povinný",
 				"titleMaxLength": "Název musí mít nejvýše 200 znaků",
-				"descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků",
-				"colorMaxLength": "Barva musí mít nejvýše 50 znaků"
+				"descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků"
 			}
 		},
 		"editFace": {
@@ -139,8 +137,6 @@
 			"titlePlaceholder": "Zadejte název",
 			"description": "Popis",
 			"descriptionPlaceholder": "Zadejte popis",
-			"color": "Barva",
-			"colorPlaceholder": "Zadejte barvu (např. #ff0000)",
 			"isPublic": "Veřejný přístup",
 			"isPublicHelp": "Přístupná bez přihlášení",
 			"gradient": {
@@ -169,8 +165,7 @@
 				"indexMaxLength": "Index musí mít nejvýše 100 znaků",
 				"titleRequired": "Název je povinný",
 				"titleMaxLength": "Název musí mít nejvýše 200 znaků",
-				"descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků",
-				"colorMaxLength": "Barva musí mít nejvýše 50 znaků"
+				"descriptionMaxLength": "Popis musí mít nejvýše 1000 znaků"
 			}
 		},
 		"pagesTable": {
@@ -389,7 +384,8 @@
 		"logout": {
 			"title": "Odhlásit",
 			"successMessage": "Odhlášení úspěšné",
-			"errorMessage": "Odhlášení selhalo. Zkuste to znovu."
+			"errorMessage": "Odhlášení selhalo. Zkuste to znovu.",
+			"sessionExpired": "Vaše relace vypršela. Přihlaste se znovu."
 		},
 		"chat": {
 			"title": "AI Chat",

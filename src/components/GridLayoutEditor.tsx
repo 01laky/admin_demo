@@ -98,10 +98,11 @@ export function GridLayoutEditor({ value, onChange }: GridLayoutEditorProps) {
 		};
 	}, [schema]);
 
-	const handleLayoutChange = useCallback(
-		(currentLayout: Layout, _allLayouts: ResponsiveLayouts) => {
-			const lgLayout = _allLayouts.lg || currentLayout;
-			const updatedItems = lgLayout.map((layoutItem: LayoutItem) => {
+	// Always persist the layout for the *active* breakpoint (first arg). Preferring `layouts.lg`
+	// alone breaks resize/drag when the editor viewport uses md/sm/xs — lg stays stale while the user edits.
+	const applyLayoutToSchema = useCallback(
+		(layout: Layout) => {
+			const updatedItems = layout.map((layoutItem: LayoutItem) => {
 				const existing = schema.items.find((item) => item.i === layoutItem.i);
 				return {
 					i: layoutItem.i,
@@ -109,8 +110,8 @@ export function GridLayoutEditor({ value, onChange }: GridLayoutEditorProps) {
 					y: layoutItem.y,
 					w: layoutItem.w,
 					h: layoutItem.h,
-					minW: layoutItem.minW || 1,
-					minH: layoutItem.minH || 1,
+					minW: layoutItem.minW ?? existing?.minW ?? 1,
+					minH: layoutItem.minH ?? existing?.minH ?? 1,
 					label: existing?.label || layoutItem.i,
 					componentType: existing?.componentType,
 				};
@@ -121,6 +122,27 @@ export function GridLayoutEditor({ value, onChange }: GridLayoutEditorProps) {
 			});
 		},
 		[schema, onChange]
+	);
+
+	const handleLayoutChange = useCallback(
+		(currentLayout: Layout, _allLayouts: ResponsiveLayouts) => {
+			applyLayoutToSchema(currentLayout);
+		},
+		[applyLayoutToSchema]
+	);
+
+	const handleDragStop = useCallback(
+		(layout: Layout) => {
+			applyLayoutToSchema(layout);
+		},
+		[applyLayoutToSchema]
+	);
+
+	const handleResizeStop = useCallback(
+		(layout: Layout) => {
+			applyLayoutToSchema(layout);
+		},
+		[applyLayoutToSchema]
 	);
 
 	const addItem = useCallback(() => {
@@ -233,6 +255,8 @@ export function GridLayoutEditor({ value, onChange }: GridLayoutEditorProps) {
 						cols={schema.cols}
 						rowHeight={schema.rowHeight}
 						onLayoutChange={handleLayoutChange}
+						onDragStop={handleDragStop}
+						onResizeStop={handleResizeStop}
 						dragConfig={{ enabled: true }}
 						resizeConfig={{ enabled: true }}
 						compactor={verticalCompactor}

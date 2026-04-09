@@ -40,7 +40,6 @@ describe('useFacesApi', () => {
 			const newFace: CreateFaceData = {
 				index: 'face2',
 				title: 'New Face',
-				color: '#00ff00',
 			};
 
 			const createdFace: Face = {

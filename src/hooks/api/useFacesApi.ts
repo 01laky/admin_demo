@@ -10,7 +10,6 @@ export interface Face {
 	index: string;
 	title: string;
 	description?: string;
-	color?: string;
 	gradientSettings?: string | null;
 	isPublic?: boolean;
 	visibility?: FaceVisibility;
@@ -53,7 +52,7 @@ const fetchFaces = async (params: UseFacesParams): Promise<UseFacesResponse> => 
 					face.index?.toLowerCase().includes(searchLower) ||
 					face.title?.toLowerCase().includes(searchLower) ||
 					face.description?.toLowerCase().includes(searchLower) ||
-					face.color?.toLowerCase().includes(searchLower)
+					face.gradientSettings?.toLowerCase().includes(searchLower)
 			);
 		}
 
@@ -116,7 +115,6 @@ export interface CreateFaceData {
 	index: string;
 	title: string;
 	description?: string;
-	color?: string;
 	gradientSettings?: string;
 	isPublic?: boolean;
 	visibility?: FaceVisibility;
@@ -150,7 +148,6 @@ export interface UpdateFaceData {
 	index?: string;
 	title?: string;
 	description?: string;
-	color?: string;
 	gradientSettings?: string;
 	isPublic?: boolean;
 	visibility?: FaceVisibility;

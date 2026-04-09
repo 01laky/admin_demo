@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useFace } from '../hooks/api/useFacesApi';
+import { gradientPreviewStyle } from '../utils/gradientPreview';
 import { Button } from '../components/radix/Button';
 import { PagesTable } from '../components/PagesTable';
 import { useLocalizedLink } from '../hooks/useLocalizedLink';
@@ -134,14 +135,15 @@ export function FaceDetailPage() {
 									</div>
 								</Col>
 							)}
-							{face.color && (
+							{face.gradientSettings && (
 								<Col xs={12} md={6}>
 									<div className="face-detail-field">
-										<label>{t('pages.faceDetail.color')}</label>
+										<label>{t('pages.faceDetail.gradient')}</label>
 										<p>
-											<span className="color-badge" style={{ backgroundColor: face.color }}>
-												{face.color}
-											</span>
+											<span
+												className="gradient-preview-swatch gradient-preview-swatch--large"
+												style={gradientPreviewStyle(face.gradientSettings)}
+											/>
 										</p>
 									</div>
 								</Col>

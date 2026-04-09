@@ -21,7 +21,6 @@ interface EditFaceFormData {
 	index: string;
 	title: string;
 	description?: string;
-	color?: string;
 	gradientSettings?: string;
 	isPublic: boolean;
 	visibility: FaceVisibility;
@@ -52,7 +51,6 @@ export function EditFacePage() {
 			.string()
 			.optional()
 			.max(1000, t('pages.editFace.validation.descriptionMaxLength')),
-		color: yup.string().optional().max(50, t('pages.editFace.validation.colorMaxLength')),
 		gradientSettings: yup.string().optional(),
 		isPublic: yup.boolean().required().default(true),
 		visibility: yup
@@ -75,7 +73,6 @@ export function EditFacePage() {
 			index: '',
 			title: '',
 			description: '',
-			color: '',
 			gradientSettings: '',
 			isPublic: true,
 			visibility: 'Public',
@@ -90,7 +87,6 @@ export function EditFacePage() {
 				index: face.index || '',
 				title: face.title || '',
 				description: face.description || '',
-				color: face.color || '',
 				gradientSettings: face.gradientSettings || '',
 				isPublic: face.isPublic ?? true,
 				visibility: (face.visibility as FaceVisibility) || 'Public',
@@ -223,16 +219,6 @@ export function EditFacePage() {
 											type="text"
 											{...register('description')}
 											placeholder={t('pages.editFace.descriptionPlaceholder')}
-											disabled={isSubmitting}
-										/>
-									</FormField>
-								</Col>
-								<Col xs={12} md={6}>
-									<FormField label={t('pages.editFace.color')} error={errors.color?.message}>
-										<Input
-											type="text"
-											{...register('color')}
-											placeholder={t('pages.editFace.colorPlaceholder')}
 											disabled={isSubmitting}
 										/>
 									</FormField>

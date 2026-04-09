@@ -17,6 +17,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHeaderCell, TableCell } f
 import { Button } from './radix/Button';
 import { Input } from './radix/Input';
 import { useLocalizedLink } from '../hooks/useLocalizedLink';
+import { gradientPreviewStyle } from '../utils/gradientPreview';
 import './FacesTable.scss';
 
 export function FacesTable() {
@@ -73,16 +74,18 @@ export function FacesTable() {
 				},
 			},
 			{
-				accessorKey: 'color',
-				header: t('pages.faceDetail.color'),
+				accessorKey: 'gradientSettings',
+				header: t('pages.faceDetail.gradient'),
 				enableSorting: false,
 				cell: (info) => {
-					const color = info.getValue() as string | undefined;
-					if (!color) return '-';
+					const raw = info.getValue() as string | null | undefined;
+					if (!raw) return '-';
 					return (
-						<span className="color-badge" style={{ backgroundColor: color }}>
-							{color}
-						</span>
+						<span
+							className="gradient-preview-swatch"
+							style={gradientPreviewStyle(raw)}
+							title={raw.length > 120 ? `${raw.slice(0, 120)}…` : raw}
+						/>
 					);
 				},
 			},

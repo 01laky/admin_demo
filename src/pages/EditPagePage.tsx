@@ -51,6 +51,14 @@ export function EditPagePage() {
 		setGridSchema(schema);
 	}, []);
 
+	// Switching edit target must reload grid from API; otherwise stale layout leaks between pages.
+	useEffect(() => {
+		queueMicrotask(() => {
+			setGridSchema(null);
+			setGridSchemaLoaded(false);
+		});
+	}, [pageId]);
+
 	// Supported languages for route translations
 	const supportedLanguages = ['en', 'sk', 'cz'];
 
@@ -107,31 +115,31 @@ export function EditPagePage() {
 		},
 	});
 
-	// Reset form when page data loads
+	// Reset form when page data loads (ignore stale `page` from keepPreviousData while another id is loading)
 	useEffect(() => {
-		if (page) {
-			reset({
-				pageTypeId: page.pageTypeId || pageTypes[0]?.id || 0,
-				name: page.name || '',
-				description: page.description || '',
-				path: page.path || '',
-				index: page.index || 0,
+		if (!page || page.id !== pageId) return;
+
+		reset({
+			pageTypeId: page.pageTypeId || pageTypes[0]?.id || 0,
+			name: page.name || '',
+			description: page.description || '',
+			path: page.path || '',
+			index: page.index || 0,
+		});
+		// Load grid schema from page data (only once per page load)
+		if (!gridSchemaLoaded && page.gridSchema) {
+			queueMicrotask(() => {
+				try {
+					setGridSchema(JSON.parse(page.gridSchema));
+				} catch {
+					// Invalid JSON, ignore
+				}
+				setGridSchemaLoaded(true);
 			});
-			// Load grid schema from page data (only once)
-			if (!gridSchemaLoaded && page.gridSchema) {
-				queueMicrotask(() => {
-					try {
-						setGridSchema(JSON.parse(page.gridSchema));
-					} catch {
-						// Invalid JSON, ignore
-					}
-					setGridSchemaLoaded(true);
-				});
-			} else if (!gridSchemaLoaded) {
-				queueMicrotask(() => setGridSchemaLoaded(true));
-			}
+		} else if (!gridSchemaLoaded) {
+			queueMicrotask(() => setGridSchemaLoaded(true));
 		}
-	}, [page, pageTypes, reset, gridSchemaLoaded]);
+	}, [page, pageId, pageTypes, reset, gridSchemaLoaded]);
 
 	const updatePageMutation = useMutation({
 		mutationFn: ({ id, data }: { id: number; data: Partial<EditPageFormData> }) =>

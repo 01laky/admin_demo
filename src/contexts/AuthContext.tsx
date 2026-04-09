@@ -2,13 +2,16 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import type { ReactNode } from 'react';
 import { setAuthToken } from '../api/config';
 import { logger } from '../utils/logger';
+import { isTokenExpired } from '../utils/jwtUtils';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import {
 	useLogin as useLoginMutation,
 	useLogout as useLogoutMutation,
 	useAuthToken,
 	useRefreshToken as useRefreshTokenMutation,
+	authKeys,
 } from '../hooks/api/useAuthApi';
 
 /**
@@ -32,7 +35,7 @@ interface AuthContextType {
 	token: string | null;
 
 	// Actions
-	login: (username: string, password: string) => Promise<void>;
+	login: (username: string, password: string, options?: { rememberMe?: boolean }) => Promise<void>;
 	logout: () => Promise<void>;
 	refreshAuth: () => Promise<void>;
 }
@@ -58,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
 	const [token, setToken] = useState<string | null>(null);
 	const { t } = useTranslation('common');
+	const queryClient = useQueryClient();
 
 	// React Query hooks
 	const loginMutation = useLoginMutation();
@@ -74,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				const storedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
 				const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
 
-				if (storedToken) {
+				if (storedToken && !isTokenExpired(storedToken)) {
 					setToken(storedToken);
 					setAuthToken(storedToken);
 					setIsAuthenticated(true);
@@ -86,6 +90,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 							logger.warn('Failed to parse stored user data', { error: String(e) });
 						}
 					}
+				} else if (storedToken && isTokenExpired(storedToken)) {
+					localStorage.removeItem(STORAGE_KEYS.TOKEN);
+					localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+					localStorage.removeItem(STORAGE_KEYS.USER);
+					setAuthToken(null);
+					queryClient.removeQueries({ queryKey: authKeys.all });
 				}
 			} catch (error) {
 				logger.error('Failed to load auth state', error);
@@ -95,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		};
 
 		loadAuthState();
-	}, []);
+	}, [queryClient]);
 
 	// Sync token from React Query
 	useEffect(() => {
@@ -110,17 +120,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	}, [tokenData, tokenLoading]);
 
+	// Session watcher: periodically check JWT expiry (aligned with fe_demo)
+	useEffect(() => {
+		if (!token || !isAuthenticated) return;
+
+		const checkExpiry = () => {
+			if (token && isTokenExpired(token)) {
+				localStorage.removeItem(STORAGE_KEYS.TOKEN);
+				localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+				localStorage.removeItem(STORAGE_KEYS.USER);
+				setAuthToken(null);
+				setToken(null);
+				setIsAuthenticated(false);
+				setUser(null);
+				queryClient.removeQueries({ queryKey: authKeys.all });
+				toast.info(
+					t('pages.logout.sessionExpired') || 'Your session has expired. Please log in again.'
+				);
+			}
+		};
+
+		const interval = setInterval(checkExpiry, 30_000);
+		return () => clearInterval(interval);
+	}, [token, isAuthenticated, t, queryClient]);
+
 	/**
 	 * Login function - uses React Query mutation
 	 */
 	const login = useCallback(
-		async (username: string, password: string) => {
+		async (username: string, password: string, options?: { rememberMe?: boolean }) => {
 			try {
 				setIsLoading(true);
 				logger.info('Attempting login', { username });
 
 				// Use React Query mutation
-				const result = await loginMutation.mutateAsync({ username, password });
+				// rememberMe optional; useAuthApi coerces for OAuth2 body (buildPasswordGrantTokenRequest).
+				const result = await loginMutation.mutateAsync({
+					username,
+					password,
+					rememberMe: options?.rememberMe,
+				});
 
 				if (result?.accessToken) {
 					setToken(result.accessToken);

@@ -19,6 +19,7 @@
 			"title": "Login",
 			"email": "Email",
 			"password": "Password",
+			"rememberMe": "Stay signed in",
 			"submit": "Sign In",
 			"submitting": "Logging in...",
 			"success": "Login successful!",
@@ -66,7 +67,7 @@
 			"index": "Index",
 			"faceTitle": "Title",
 			"description": "Description",
-			"color": "Color",
+			"gradient": "Gradient",
 			"isPublic": "Visibility",
 			"public": "Public",
 			"private": "Private",
@@ -114,8 +115,6 @@
 			"titlePlaceholder": "Enter title",
 			"description": "Description",
 			"descriptionPlaceholder": "Enter description",
-			"color": "Color",
-			"colorPlaceholder": "Enter color (e.g., #ff0000)",
 			"isPublic": "Public Access",
 			"isPublicHelp": "Accessible without authentication",
 			"submit": "Create Face",
@@ -127,8 +126,7 @@
 				"indexMaxLength": "Index must be at most 100 characters",
 				"titleRequired": "Title is required",
 				"titleMaxLength": "Title must be at most 200 characters",
-				"descriptionMaxLength": "Description must be at most 1000 characters",
-				"colorMaxLength": "Color must be at most 50 characters"
+				"descriptionMaxLength": "Description must be at most 1000 characters"
 			}
 		},
 		"editFace": {
@@ -139,8 +137,6 @@
 			"titlePlaceholder": "Enter title",
 			"description": "Description",
 			"descriptionPlaceholder": "Enter description",
-			"color": "Color",
-			"colorPlaceholder": "Enter color (e.g., #ff0000)",
 			"isPublic": "Public Access",
 			"isPublicHelp": "Accessible without authentication",
 			"gradient": {
@@ -169,8 +165,7 @@
 				"indexMaxLength": "Index must be at most 100 characters",
 				"titleRequired": "Title is required",
 				"titleMaxLength": "Title must be at most 200 characters",
-				"descriptionMaxLength": "Description must be at most 1000 characters",
-				"colorMaxLength": "Color must be at most 50 characters"
+				"descriptionMaxLength": "Description must be at most 1000 characters"
 			}
 		},
 		"pagesTable": {
@@ -389,7 +384,8 @@
 		"logout": {
 			"title": "Logout",
 			"successMessage": "Logged out successfully",
-			"errorMessage": "Logout failed. Please try again."
+			"errorMessage": "Logout failed. Please try again.",
+			"sessionExpired": "Your session has expired. Please sign in again."
 		},
 		"chat": {
 			"title": "AI Chat",

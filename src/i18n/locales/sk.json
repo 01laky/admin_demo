@@ -19,6 +19,7 @@
 			"title": "Prihlásenie",
 			"email": "Email",
 			"password": "Heslo",
+			"rememberMe": "Zostať trvalo prihlásený",
 			"submit": "Prihlásiť sa",
 			"submitting": "Prihlasujem...",
 			"success": "Prihlásenie úspešné!",
@@ -66,7 +67,7 @@
 			"index": "Index",
 			"faceTitle": "Názov",
 			"description": "Popis",
-			"color": "Farba",
+			"gradient": "Gradient",
 			"isPublic": "Viditeľnosť",
 			"public": "Verejná",
 			"private": "Súkromná",
@@ -114,8 +115,6 @@
 			"titlePlaceholder": "Zadajte názov",
 			"description": "Popis",
 			"descriptionPlaceholder": "Zadajte popis",
-			"color": "Farba",
-			"colorPlaceholder": "Zadajte farbu (napr. #ff0000)",
 			"isPublic": "Verejný prístup",
 			"isPublicHelp": "Prístupná bez prihlásenia",
 			"submit": "Vytvoriť tvár",
@@ -127,8 +126,7 @@
 				"indexMaxLength": "Index musí mať najviac 100 znakov",
 				"titleRequired": "Názov je povinný",
 				"titleMaxLength": "Názov musí mať najviac 200 znakov",
-				"descriptionMaxLength": "Popis musí mať najviac 1000 znakov",
-				"colorMaxLength": "Farba musí mať najviac 50 znakov"
+				"descriptionMaxLength": "Popis musí mať najviac 1000 znakov"
 			}
 		},
 		"editFace": {
@@ -139,8 +137,6 @@
 			"titlePlaceholder": "Zadajte názov",
 			"description": "Popis",
 			"descriptionPlaceholder": "Zadajte popis",
-			"color": "Farba",
-			"colorPlaceholder": "Zadajte farbu (napr. #ff0000)",
 			"isPublic": "Verejný prístup",
 			"isPublicHelp": "Prístupná bez prihlásenia",
 			"gradient": {
@@ -169,8 +165,7 @@
 				"indexMaxLength": "Index musí mať najviac 100 znakov",
 				"titleRequired": "Názov je povinný",
 				"titleMaxLength": "Názov musí mať najviac 200 znakov",
-				"descriptionMaxLength": "Popis musí mať najviac 1000 znakov",
-				"colorMaxLength": "Farba musí mať najviac 50 znakov"
+				"descriptionMaxLength": "Popis musí mať najviac 1000 znakov"
 			}
 		},
 		"pagesTable": {
@@ -389,7 +384,8 @@
 		"logout": {
 			"title": "Odhlásiť",
 			"successMessage": "Odhlásenie úspešné",
-			"errorMessage": "Odhlásenie zlyhalo. Skúste to znova."
+			"errorMessage": "Odhlásenie zlyhalo. Skúste to znova.",
+			"sessionExpired": "Vaša relácia vypršala. Prihláste sa znova."
 		},
 		"chat": {
 			"title": "AI Chat",

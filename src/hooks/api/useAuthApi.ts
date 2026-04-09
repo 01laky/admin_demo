@@ -3,7 +3,11 @@ import { AuthService, OAuth2Service, ApiError } from '../../api';
 import type { OAuth2TokenRequest, RegisterModel } from '../../api';
 import { setAuthToken } from '../../api/config';
 import { logger } from '../../utils/logger';
+import { isTokenExpired } from '../../utils/jwtUtils';
 import { env } from '../../config/env';
+import { buildPasswordGrantTokenRequest } from './authTokenRequest';
+
+/** Login: password grant + rememberMe for long JWT; useAuthToken rejects expired tokens from localStorage. */
 
 // Query keys
 export const authKeys = {
@@ -50,16 +54,20 @@ export function useLogin() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: async (credentials: { username: string; password: string }) => {
+		mutationFn: async (credentials: {
+			username: string;
+			password: string;
+			rememberMe?: boolean;
+		}) => {
 			logger.info('Attempting login', { username: credentials.username });
 
-			const tokenRequest: OAuth2TokenRequest = {
-				grantType: 'password',
+			const tokenRequest = buildPasswordGrantTokenRequest({
 				username: credentials.username,
 				password: credentials.password,
+				rememberMe: credentials.rememberMe,
 				clientId: env.oauth2ClientId,
 				clientSecret: env.oauth2ClientSecret,
-			};
+			});
 
 			let response;
 			try {
@@ -123,13 +131,20 @@ export function useAuthToken() {
 		queryKey: authKeys.token(),
 		queryFn: () => {
 			const token = localStorage.getItem('auth_token');
-			if (token) {
-				setAuthToken(token);
-				return { accessToken: token };
+			// Drop expired JWT from cache + storage (same behaviour as fe_demo AuthProvider).
+			if (!token || isTokenExpired(token)) {
+				if (token) {
+					localStorage.removeItem('auth_token');
+					localStorage.removeItem('auth_refresh_token');
+					localStorage.removeItem('auth_user');
+					setAuthToken(null);
+				}
+				return null;
 			}
-			return null;
+			setAuthToken(token);
+			return { accessToken: token };
 		},
-		staleTime: Infinity, // Token doesn't change unless explicitly updated
+		staleTime: 60_000,
 	});
 }
 

@@ -17,7 +17,6 @@ interface CreateFaceFormData {
 	index: string;
 	title: string;
 	description?: string;
-	color?: string;
 	isPublic: boolean;
 }
 
@@ -41,7 +40,6 @@ export function CreateFacePage() {
 			.string()
 			.optional()
 			.max(1000, t('pages.createFace.validation.descriptionMaxLength')),
-		color: yup.string().optional().max(50, t('pages.createFace.validation.colorMaxLength')),
 		isPublic: yup.boolean().required().default(true),
 	});
 
@@ -55,7 +53,6 @@ export function CreateFacePage() {
 			index: '',
 			title: '',
 			description: '',
-			color: '',
 			isPublic: true,
 		},
 	});
@@ -136,16 +133,6 @@ export function CreateFacePage() {
 											type="text"
 											{...register('description')}
 											placeholder={t('pages.createFace.descriptionPlaceholder')}
-											disabled={isSubmitting}
-										/>
-									</FormField>
-								</Col>
-								<Col xs={12} md={6}>
-									<FormField label={t('pages.createFace.color')} error={errors.color?.message}>
-										<Input
-											type="text"
-											{...register('color')}
-											placeholder={t('pages.createFace.colorPlaceholder')}
 											disabled={isSubmitting}
 										/>
 									</FormField>

@@ -6,6 +6,5 @@ export type CreateFaceModel = {
     index: string;
     title: string;
     description?: string | null;
-    color?: string | null;
+    gradientSettings?: string | null;
 };
-

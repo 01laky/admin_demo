@@ -52,6 +52,19 @@
 			color: var(--bs-body-color);
 		}
 
+		.gradient-preview-swatch {
+			display: inline-block;
+			width: 120px;
+			height: 40px;
+			border-radius: 8px;
+			border: 1px solid rgba(0, 0, 0, 0.12);
+		}
+
+		.gradient-preview-swatch--large {
+			width: 160px;
+			height: 48px;
+		}
+
 		.color-badge {
 			display: inline-block;
 			padding: 0.25rem 0.5rem;
