@@ -1,10 +1,10 @@
-import { env } from '../../config/env';
 import { getApiErrorMessage } from '../../utils/apiErrorMessage';
+import { absoluteScopedUrl } from '../faceApiRouting';
 
 const REQ_FAILED = 'Request failed';
 
 async function authFetch(path: string, token: string, init?: RequestInit) {
-  const res = await fetch(`${env.apiUrl}${path}`, {
+  const res = await fetch(absoluteScopedUrl(path), {
     ...init,
     headers: {
       'Content-Type': 'application/json',

@@ -1,5 +1,9 @@
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { OpenAPI } from './core/OpenAPI';
 import { env } from '../config/env';
+import { applyFacePrefixToRequestUrl } from './faceApiRouting';
+
+let interceptorsSetup = false;
 
 /**
  * Configure API client with base URL from environment variables
@@ -16,6 +20,37 @@ export function configureApiClient() {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   };
+
+  if (!interceptorsSetup && typeof window !== 'undefined') {
+    axios.interceptors.request.use(
+      (config: InternalAxiosRequestConfig) => {
+        if (!config.url) return config as InternalAxiosRequestConfig;
+
+        const u = config.url;
+        const base = env.apiUrl.replace(/\/$/, '');
+        const targetsApiHost =
+          u.startsWith('/api/') ||
+          u === '/api' ||
+          u.startsWith('/hubs/') ||
+          u === '/hubs' ||
+          u.startsWith(`${base}/api/`) ||
+          u.startsWith(`${base}/api?`) ||
+          u === `${base}/api` ||
+          u.startsWith(`${base}/hubs/`) ||
+          u.startsWith(`${base}/hubs?`) ||
+          u === `${base}/hubs`;
+
+        if (!targetsApiHost) {
+          return config as InternalAxiosRequestConfig;
+        }
+
+        config.url = applyFacePrefixToRequestUrl(u, env.defaultFacePrefix, env.apiUrl);
+        return config as InternalAxiosRequestConfig;
+      },
+      (error: AxiosError) => Promise.reject(error)
+    );
+    interceptorsSetup = true;
+  }
   
   if (env.debugMode) {
     console.log(`API client configured with base URL: ${env.apiUrl}`);
