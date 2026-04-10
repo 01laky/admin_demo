@@ -5,6 +5,7 @@ This project uses **Yarn Berry (v4)** with **PnP (Plug'n'Play)** instead of trad
 ## What is PnP?
 
 PnP (Plug'n'Play) is Yarn's modern approach to dependency management that:
+
 - **Eliminates `node_modules`** - No more huge `node_modules` folders
 - **Faster installs** - Dependencies are stored in `.yarn/cache` as zip files
 - **Better security** - Strict dependency resolution prevents phantom dependencies
@@ -56,6 +57,7 @@ yarn dlx @yarnpkg/sdks vscode
 ```
 
 This will:
+
 - Install TypeScript SDK
 - Configure ESLint
 - Set up the workspace
@@ -63,6 +65,7 @@ This will:
 ### Other IDEs
 
 Most modern IDEs support PnP through the `.pnp.cjs` file. If you encounter issues:
+
 1. Make sure your IDE is using the TypeScript version from `.yarn/sdks/typescript`
 2. Check that ESLint is configured to use the PnP resolver
 
@@ -71,6 +74,7 @@ Most modern IDEs support PnP through the `.pnp.cjs` file. If you encounter issue
 ### "Cannot find module" errors
 
 If you see module resolution errors:
+
 1. Make sure `.pnp.cjs` exists
 2. Run `yarn install` to regenerate it
 3. Restart your IDE/editor
@@ -78,6 +82,7 @@ If you see module resolution errors:
 ### Vite/TypeScript not finding modules
 
 Vite and TypeScript should work automatically with PnP. If not:
+
 1. Check that `vite.config.ts` has PnP support (already configured)
 2. Restart the dev server
 3. Clear cache: `yarn cache clean`
@@ -85,6 +90,7 @@ Vite and TypeScript should work automatically with PnP. If not:
 ### Peer dependency warnings
 
 Some packages may show peer dependency warnings. This is usually safe to ignore, but you can:
+
 - Add missing peer dependencies: `yarn add -D <package>`
 - Check with: `yarn explain peer-requirements`
 
@@ -95,7 +101,7 @@ Some packages may show peer dependency warnings. This is usually safe to ignore,
 ✅ **Better security** - Prevents phantom dependencies  
 ✅ **Smaller size** - Shared cache, compressed packages  
 ✅ **Deterministic** - Same dependencies every time  
-✅ **Zero-installs** - Can commit cache for instant installs  
+✅ **Zero-installs** - Can commit cache for instant installs
 
 ## Migration Notes
 

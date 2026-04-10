@@ -41,46 +41,46 @@ Radix UI components are headless (unstyled), so you need to add your own styles.
 ### Example: Dialog
 
 ```tsx
-import * as Dialog from '@radix-ui/react-dialog'
+import * as Dialog from '@radix-ui/react-dialog';
 
 function MyDialog() {
-  return (
-    <Dialog.Root>
-      <Dialog.Trigger>Open</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay />
-        <Dialog.Content>
-          <Dialog.Title>Title</Dialog.Title>
-          <Dialog.Description>Description</Dialog.Description>
-          <Dialog.Close>Close</Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  )
+	return (
+		<Dialog.Root>
+			<Dialog.Trigger>Open</Dialog.Trigger>
+			<Dialog.Portal>
+				<Dialog.Overlay />
+				<Dialog.Content>
+					<Dialog.Title>Title</Dialog.Title>
+					<Dialog.Description>Description</Dialog.Description>
+					<Dialog.Close>Close</Dialog.Close>
+				</Dialog.Content>
+			</Dialog.Portal>
+		</Dialog.Root>
+	);
 }
 ```
 
 ### Example: Select
 
 ```tsx
-import * as Select from '@radix-ui/react-select'
+import * as Select from '@radix-ui/react-select';
 
 function MySelect() {
-  return (
-    <Select.Root>
-      <Select.Trigger>
-        <Select.Value placeholder="Select..." />
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Content>
-          <Select.Viewport>
-            <Select.Item value="1">Option 1</Select.Item>
-            <Select.Item value="2">Option 2</Select.Item>
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
-    </Select.Root>
-  )
+	return (
+		<Select.Root>
+			<Select.Trigger>
+				<Select.Value placeholder="Select..." />
+			</Select.Trigger>
+			<Select.Portal>
+				<Select.Content>
+					<Select.Viewport>
+						<Select.Item value="1">Option 1</Select.Item>
+						<Select.Item value="2">Option 2</Select.Item>
+					</Select.Viewport>
+				</Select.Content>
+			</Select.Portal>
+		</Select.Root>
+	);
 }
 ```
 

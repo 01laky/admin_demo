@@ -99,6 +99,7 @@ The easiest way to run the admin panel in development:
 ```
 
 This script will:
+
 1. Check and install dependencies if needed
 2. Run code validation (TypeScript, ESLint)
 3. Format code with Prettier
@@ -128,6 +129,7 @@ docker-compose -f docker-compose.dev.yml up -d admin-demo-dev
 ```
 
 Or manually:
+
 ```bash
 docker-compose -f docker-compose.yml down
 ```
@@ -153,11 +155,13 @@ To perform a clean rebuild of Docker images:
 ### Local Development (Without Docker)
 
 1. **Install dependencies**:
+
    ```bash
    yarn install
    ```
 
 2. **Start development server**:
+
    ```bash
    yarn dev
    ```
@@ -165,11 +169,13 @@ To perform a clean rebuild of Docker images:
    The app will be available at `http://localhost:8082`
 
 3. **Run tests**:
+
    ```bash
    yarn test
    ```
 
 4. **Format code**:
+
    ```bash
    yarn format
    ```
@@ -246,15 +252,15 @@ const users = await UsersService.getUsers();
 
 // Create user
 const newUser = await UsersService.createUser({
-  email: 'user@example.com',
-  password: 'password123',
-  firstName: 'John',
-  lastName: 'Doe'
+	email: 'user@example.com',
+	password: 'password123',
+	firstName: 'John',
+	lastName: 'Doe',
 });
 
 // Update user
 await UsersService.updateUser(userId, {
-  firstName: 'Jane'
+	firstName: 'Jane',
 });
 
 // Delete user
@@ -278,7 +284,7 @@ The admin panel provides custom hooks for API operations:
 
 3. **Make code changes**: Edit code in `src/`
 
-4. **Test changes**: 
+4. **Test changes**:
    - Unit tests: `yarn test`
    - Component tests: `yarn test` (tests in `src/components/__tests__/` and `src/hooks/api/__tests__/`)
    - Manual testing: Open `http://localhost:8082`
@@ -308,6 +314,7 @@ yarn test:coverage
 ```
 
 Tests are located in:
+
 - `src/components/__tests__/` - Component tests (UsersTable, PagesTable)
 - `src/hooks/api/__tests__/` - API hook tests (useFacesApi, usePagesApi, useUsersApi)
 - `src/utils/__tests__/` - Utility function tests
@@ -358,6 +365,7 @@ This admin panel is part of the `_mfai_demo` monorepo and integrates with:
 - **Frontend**: `fe_demo` (separate user-facing application)
 
 Use root-level scripts to manage all services:
+
 - `start-all-dev.sh` - Start all services with live status screen
 - `stop-all-dev.sh` - Stop all services
 - `clear-all-dev.sh` - Clear all containers and volumes
