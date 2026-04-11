@@ -75,7 +75,10 @@ export function GradientPicker({ value, onChange, disabled }: GradientPickerProp
 	const [settings, setSettings] = useState<GradientSettings>(() => parseGradientSettings(value));
 
 	useEffect(() => {
-		setSettings(parseGradientSettings(value));
+		void (async () => {
+			await Promise.resolve();
+			setSettings(parseGradientSettings(value));
+		})();
 	}, [value]);
 
 	const emitChange = useCallback(

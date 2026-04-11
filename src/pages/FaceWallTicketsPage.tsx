@@ -35,6 +35,7 @@ export function FaceWallTicketsPage() {
 	const [actionBusy, setActionBusy] = useState(false);
 
 	const loadList = async () => {
+		await Promise.resolve();
 		if (!faceId) return;
 		if (!token) {
 			setLoading(false);
@@ -56,7 +57,10 @@ export function FaceWallTicketsPage() {
 	};
 
 	useEffect(() => {
-		void loadList();
+		void (async () => {
+			await Promise.resolve();
+			await loadList();
+		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps -- token/faceId/page only
 	}, [token, faceId, page]);
 
