@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import type { HubConnection } from '@microsoft/signalr';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
-import { env } from '../config/env';
+import { buildAdminAiChatHubConnection } from '../api/signalr/buildAdminAiChatHubConnection';
 import { Button } from '../components/radix/Button';
 import './ChatPage.scss';
 
@@ -80,13 +80,7 @@ export function ChatPage() {
 	useEffect(() => {
 		if (!token) return;
 
-		const hubUrl = `${env.apiUrl}/hubs/chat`;
-		const connection = new HubConnectionBuilder()
-			.withUrl(hubUrl, {
-				accessTokenFactory: () => token,
-			})
-			.withAutomaticReconnect()
-			.build();
+		const connection = buildAdminAiChatHubConnection(token);
 
 		connectionRef.current = connection;
 
@@ -107,16 +101,29 @@ export function ChatPage() {
 		connection.onreconnected(() => setConnectionState('Connected'));
 		connection.onclose(() => setConnectionState('Disconnected'));
 
-		queueMicrotask(() => setConnectionState('Connecting'));
-		connection
-			.start()
-			.then(() => setConnectionState('Connected'))
-			.catch(() => setConnectionState('Disconnected'));
+		const syncVisibility = () => {
+			if (document.visibilityState === 'hidden') {
+				setIsSending(false);
+				void connection.stop();
+				setConnectionState('Disconnected');
+				return;
+			}
+			queueMicrotask(() => setConnectionState('Connecting'));
+			void connection
+				.start()
+				.then(() => setConnectionState('Connected'))
+				.catch(() => setConnectionState('Disconnected'));
+		};
+
+		document.addEventListener('visibilitychange', syncVisibility);
+		syncVisibility();
 
 		return () => {
-			connection.stop().catch(() => {});
+			document.removeEventListener('visibilitychange', syncVisibility);
+			void connection.stop();
 			connectionRef.current = null;
 			setConnectionState('Disconnected');
+			setIsSending(false);
 		};
 	}, [token]);
 

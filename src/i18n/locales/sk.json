@@ -400,6 +400,7 @@
 		}
 	},
 	"common": {
+		"loading": "Načítava sa…",
 		"back": "Späť",
 		"cancel": "Zrušiť",
 		"edit": "Upraviť",

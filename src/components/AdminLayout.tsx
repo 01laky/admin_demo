@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useLocalizedLink } from '../hooks/useLocalizedLink';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import './AdminLayout.scss';
 
 interface NavItem {
@@ -45,6 +45,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 	const { t } = useTranslation('common');
 	const { user, logout } = useAuth();
 	const getLocalizedPath = useLocalizedLink();
+	const reduceMotion = useReducedMotion();
 
 	// Detect screen size
 	const handleResize = useCallback(() => {
@@ -121,18 +122,29 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
 			{/* ==================== SIDEBAR ==================== */}
 			{/* Overlay backdrop for mobile/tablet */}
-			<AnimatePresence>
-				{isMobile && sidebarOpen && (
-					<motion.div
+			{reduceMotion ? (
+				isMobile &&
+				sidebarOpen && (
+					<div
 						className="admin-sidebar-overlay"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.2 }}
+						style={{ opacity: 1 }}
 						onClick={() => setSidebarOpen(false)}
 					/>
-				)}
-			</AnimatePresence>
+				)
+			) : (
+				<AnimatePresence>
+					{isMobile && sidebarOpen && (
+						<motion.div
+							className="admin-sidebar-overlay"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.2 }}
+							onClick={() => setSidebarOpen(false)}
+						/>
+					)}
+				</AnimatePresence>
+			)}
 
 			<aside
 				className={`admin-sidebar ${sidebarOpen ? 'admin-sidebar--open' : 'admin-sidebar--closed'} ${isMobile ? 'admin-sidebar--mobile' : 'admin-sidebar--desktop'}`}

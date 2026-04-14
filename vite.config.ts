@@ -33,6 +33,14 @@ const httpsServer = useBasicSslPlugin ? true : httpsOpt;
 
 export default defineConfig({
 	plugins: [react(), ...(useBasicSslPlugin ? [basicSsl()] : [])],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				// Bootstrap 5 still uses @import and legacy Sass APIs; noise hides real issues in app SCSS.
+				silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
+			},
+		},
+	},
 	server: {
 		port: Number(process.env.VITE_DEV_PORT) || 8082,
 		host: true,
@@ -44,5 +52,41 @@ export default defineConfig({
 	define: {
 		__APP_NAME__: JSON.stringify(process.env.VITE_APP_NAME || 'Be Demo Frontend'),
 		__APP_VERSION__: JSON.stringify(process.env.VITE_APP_VERSION || '1.0.0'),
+	},
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id: string) {
+					if (!id.includes('node_modules')) return;
+					if (id.includes('node_modules/react-dom')) return 'vendor-react-dom';
+					if (id.includes('node_modules/react-router')) return 'vendor-router';
+					if (id.includes('node_modules/@tanstack/react-query')) return 'vendor-query';
+					if (id.includes('node_modules/@microsoft/signalr')) return 'vendor-signalr';
+					if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
+					if (id.includes('node_modules/react/')) return 'vendor-react';
+					if (
+						id.includes('node_modules/react-grid-layout') ||
+						id.includes('node_modules/react-resizable') ||
+						id.includes('node_modules/react-draggable')
+					) {
+						return 'vendor-grid-layout';
+					}
+					if (id.includes('node_modules/@radix-ui')) return 'vendor-radix';
+					if (id.includes('node_modules/react-bootstrap') || id.includes('node_modules/bootstrap'))
+						return 'vendor-bootstrap';
+					if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next'))
+						return 'vendor-i18n';
+					if (
+						id.includes('node_modules/react-hook-form') ||
+						id.includes('node_modules/@hookform') ||
+						id.includes('node_modules/yup')
+					) {
+						return 'vendor-forms';
+					}
+					if (id.includes('node_modules/axios')) return 'vendor-axios';
+					return 'vendor';
+				},
+			},
+		},
 	},
 });

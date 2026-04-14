@@ -400,6 +400,7 @@
 		}
 	},
 	"common": {
+		"loading": "Načítání…",
 		"back": "Zpět",
 		"cancel": "Zrušit",
 		"edit": "Upravit",

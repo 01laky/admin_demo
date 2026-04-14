@@ -400,6 +400,7 @@
 		}
 	},
 	"common": {
+		"loading": "Loading…",
 		"back": "Back",
 		"cancel": "Cancel",
 		"edit": "Edit",

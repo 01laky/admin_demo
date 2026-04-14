@@ -7,6 +7,7 @@ const routeKeys: Record<string, string> = {
 	dashboard: 'routes.dashboard',
 	users: 'routes.users',
 	faces: 'routes.faces',
+	chat: 'routes.chat',
 };
 
 // Map of route keys to English route names (reverse lookup)
@@ -16,6 +17,7 @@ const routeKeyToEnglish: Record<string, string> = {
 	'routes.dashboard': 'dashboard',
 	'routes.users': 'users',
 	'routes.faces': 'faces',
+	'routes.chat': 'chat',
 };
 
 /**

@@ -97,6 +97,9 @@ class FrontendLogger {
 		if (this.buffer.length === 0 || !this.enabled) {
 			return;
 		}
+		if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+			return;
+		}
 
 		const logsToSend = [...this.buffer];
 		this.buffer = [];

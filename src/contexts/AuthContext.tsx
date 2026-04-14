@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { setAuthToken } from '../api/config';
 import { logger } from '../utils/logger';
@@ -132,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		})();
 	}, [tokenData, tokenLoading]);
 
-	// Session watcher: periodically check JWT expiry (aligned with fe_demo)
+	// Session watcher: periodically check JWT expiry; skip ticks while tab is hidden.
 	useEffect(() => {
 		if (!token || !isAuthenticated) return;
 
@@ -152,8 +152,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			}
 		};
 
-		const interval = setInterval(checkExpiry, 30_000);
-		return () => clearInterval(interval);
+		const tick = () => {
+			if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+			checkExpiry();
+		};
+
+		const interval = setInterval(tick, 30_000);
+		const onVisibility = () => {
+			if (typeof document !== 'undefined' && document.visibilityState === 'visible') tick();
+		};
+		document.addEventListener('visibilitychange', onVisibility);
+		return () => {
+			clearInterval(interval);
+			document.removeEventListener('visibilitychange', onVisibility);
+		};
 	}, [token, isAuthenticated, t, queryClient]);
 
 	/**
@@ -283,18 +295,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	}, [refreshTokenMutation, logout]);
 
+	const authContextValue = useMemo(
+		() => ({
+			isAuthenticated,
+			isLoading,
+			user,
+			token,
+			login,
+			logout,
+			refreshAuth,
+		}),
+		[isAuthenticated, isLoading, user, token, login, logout, refreshAuth]
+	);
+
 	return (
-		<AuthContext.Provider
-			value={{
-				isAuthenticated,
-				isLoading,
-				user,
-				token,
-				login,
-				logout,
-				refreshAuth,
-			}}
-		>
+		<AuthContext.Provider value={authContextValue}>
 			<MeCapabilitiesWarmup token={token} />
 			{children}
 		</AuthContext.Provider>
