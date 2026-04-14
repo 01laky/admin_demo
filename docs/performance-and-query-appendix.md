@@ -1,6 +1,6 @@
 # admin_demo — performance & data layer appendix
 
-Companion to [`docs/prompts/admin-performance-and-refactor-agent-prompt.md`](../../docs/prompts/admin-performance-and-refactor-agent-prompt.md). Copy sections into a PR as evidence or waivers.
+Companion to [`docs/prompts/admin-performance-and-refactor-agent-prompt.md`](../../docs/prompts/admin-performance-and-refactor-agent-prompt.md). **`fe_demo` mirror:** [`fe_demo/docs/performance-and-query-appendix.md`](../../fe_demo/docs/performance-and-query-appendix.md). Copy sections into a PR as evidence or waivers.
 
 ## Node / toolchain
 
