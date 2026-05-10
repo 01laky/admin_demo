@@ -1,10 +1,78 @@
-# Admin Demo - Admin Panel Application
-
-React + TypeScript + Vite admin panel for managing BeDemo resources.
+# Many Faces AI (MFAI) - admin panel application
 
 ## Overview
 
-The Admin Panel (admin_demo) is a React-based administrative interface for managing users, faces, pages, and page types in the BeDemo system. It provides CRUD operations and detailed views for all resources managed by the backend API.
+The MFAI admin panel is the operator-facing React application for configuring the Many Faces AI demo. It manages the structural data that shapes the user-facing experience: users, faces, page types, pages, localized routes, role-aware access, and the grid layout schemas rendered by the frontend.
+
+The admin application is built around the same **faces** concept as the user frontend. A face can represent a public community, private group, branded space, or specialized social environment. Admin users configure those spaces by creating faces, assigning pages, editing page metadata, managing localized route translations, and arranging reusable social modules inside responsive page grids.
+
+The most important bridge between the admin panel and frontend is the page `gridSchema`. Admin users edit the schema through `GridLayoutEditor`, choose component types through `ComponentPickerModal`, drag/resize blocks with `react-grid-layout`, and save the result through the Pages API. The frontend later reads the same schema and renders matching `PageGridLayout` / `ComponentBlock` structures for end users.
+
+Security and trust boundaries are part of the admin design. The app uses OAuth2/JWT authentication, protected admin routes, capability warmup through `/me/capabilities`, role/permission helpers, and guarded views/actions so operational features are exposed intentionally. Backend enforcement remains the source of truth, while the admin UI mirrors those rules to keep sensitive administration workflows understandable.
+
+From an engineering perspective, this submodule demonstrates a modern React admin architecture: generated OpenAPI clients, TanStack Query hooks, localized admin routes, reusable Radix-based form/table components, protected layouts, page editors, grid schema editing, Docker-based local development, linting, type checks, unit tests, and integration with the root monorepo scripts.
+
+## What This Admin Panel Shows
+
+- Admin CRUD workflows for users, faces, pages, and page types.
+- Face/page configuration that directly drives the user-facing frontend.
+- Localized admin routes and page route translation management.
+- Responsive grid schema editing with draggable/resizable blocks.
+- Component picking for albums, ads, blogs, chat rooms, profiles, reels, stories, and their grid/carousel variants.
+- Preservation of component metadata such as title, icon, and bound content ids while layouts are edited.
+- OAuth2/JWT-backed protected admin routes.
+- Capability-aware admin state loaded through `/me/capabilities`.
+- Generated OpenAPI API client with typed services and models.
+- TanStack Query hooks for resource loading, mutation, cache invalidation, and UI refresh.
+- Docker-first local development that works both standalone and through the root monorepo scripts.
+- Validation through ESLint, TypeScript checks, Vitest tests, and component/API hook tests.
+
+## Admin Configuration Flow
+
+Admin users configure the data model that the backend stores and the frontend later renders:
+
+```mermaid
+flowchart LR
+    operator["Admin / Operator"] --> admin["admin_demo<br/>React admin panel"]
+    admin --> auth["ProtectedRoute<br/>OAuth2 / JWT"]
+    auth --> caps["/me/capabilities<br/>role + permission state"]
+
+    admin --> users["Users<br/>CRUD + detail/edit"]
+    admin --> faces["Faces<br/>community spaces"]
+    admin --> pageTypes["Page Types<br/>page classification"]
+    admin --> pages["Pages<br/>metadata, paths, index"]
+
+    pages --> translations["Route translations<br/>en / sk / cz"]
+    pages --> grid["GridLayoutEditor<br/>responsive schema editing"]
+
+    users --> api["Backend API"]
+    faces --> api
+    pageTypes --> api
+    translations --> api
+    grid --> api
+    api --> db["PostgreSQL<br/>stored admin data"]
+```
+
+## Grid Schema Lifecycle
+
+The admin panel creates and updates the `gridSchema` that the frontend consumes as a read-only layout:
+
+```mermaid
+flowchart TD
+    editPage["EditPagePage"] --> load["Load page + route translations<br/>usePage / usePageRouteTranslations"]
+    load --> parse["Parse page.gridSchema JSON"]
+    parse --> editor["GridLayoutEditor"]
+
+    editor --> picker["ComponentPickerModal<br/>choose component type"]
+    picker --> item["Grid item<br/>componentType, title, icon, bound ids"]
+    item --> layout["react-grid-layout<br/>drag, resize, order"]
+    layout --> preserve["applyLayoutToSchema<br/>preserve metadata"]
+
+    preserve --> serialize["JSON.stringify(gridSchema)"]
+    serialize --> save["updatePage mutation"]
+    save --> invalidate["Invalidate page / pages / face queries"]
+    invalidate --> frontend["fe_demo reads schema<br/>PageGridLayout renders blocks"]
+```
 
 ## Features
 
