@@ -20,12 +20,19 @@ From an engineering perspective, this submodule demonstrates a modern React admi
 - Responsive grid schema editing with draggable/resizable blocks.
 - Component picking for albums, ads, blogs, chat rooms, profiles, reels, stories, and their grid/carousel variants.
 - Preservation of component metadata such as title, icon, and bound content ids while layouts are edited.
+- Superadmin-only moderation queue for user-created albums, blogs, and reels submitted from the frontend.
 - OAuth2/JWT-backed protected admin routes.
 - Capability-aware admin state loaded through `/me/capabilities`.
 - Generated OpenAPI API client with typed services and models.
 - TanStack Query hooks for resource loading, mutation, cache invalidation, and UI refresh.
 - Docker-first local development that works both standalone and through the root monorepo scripts.
 - Validation through ESLint, TypeScript checks, Vitest tests, and component/API hook tests.
+
+## Content Moderation
+
+The admin portal includes a first `Moderation` area for reviewing FE user-created albums, blogs, and reels. The view is intended for `SUPER_ADMIN` users only in the current phase and mirrors backend enforcement: `ADMIN` and `FACE_ADMIN` are intentionally excluded from approve, reject, and remove actions.
+
+The page uses typed moderation API hooks, localized routing, and safe display helpers for approval and AI review states. It can filter the queue by content type and approval status, show key metadata such as face, author, AI status, and confidence, and send approve/reject/remove decisions with a reason. The backend remains the source of truth for permissions and audit events.
 
 ## Admin Configuration Flow
 

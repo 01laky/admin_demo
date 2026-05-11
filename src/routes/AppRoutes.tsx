@@ -15,6 +15,7 @@ import {
 	FacesPage,
 	FaceDetailPage,
 	FaceWallTicketsPage,
+	ContentModerationPage,
 	CreateFacePage,
 	EditFacePage,
 	CreatePagePage,
@@ -35,6 +36,7 @@ export function AppRoutes() {
 		homepage: homepagePaths,
 		users: usersPaths,
 		faces: facesPaths,
+		moderation: moderationPaths,
 		chat: chatPaths,
 	} = useAdminRoutePaths();
 
@@ -190,6 +192,18 @@ export function AppRoutes() {
 							element={
 								<ProtectedRoute redirectTo="login">
 									{withLayout(<FaceWallTicketsPage />)}
+								</ProtectedRoute>
+							}
+						/>
+					))}
+
+					{moderationPaths.map((path) => (
+						<Route
+							key={path}
+							path={path}
+							element={
+								<ProtectedRoute redirectTo="login">
+									{withLayout(<ContentModerationPage />)}
 								</ProtectedRoute>
 							}
 						/>

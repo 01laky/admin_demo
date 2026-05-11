@@ -28,6 +28,9 @@ export const FaceDetailPage = lazy(() =>
 export const FaceWallTicketsPage = lazy(() =>
 	import('../pages/FaceWallTicketsPage').then((m) => ({ default: m.FaceWallTicketsPage }))
 );
+export const ContentModerationPage = lazy(() =>
+	import('../pages/ContentModerationPage').then((m) => ({ default: m.ContentModerationPage }))
+);
 export const CreateFacePage = lazy(() =>
 	import('../pages/CreateFacePage').then((m) => ({ default: m.CreateFacePage }))
 );

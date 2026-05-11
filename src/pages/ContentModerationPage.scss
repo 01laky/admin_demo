@@ -1,0 +1,36 @@
+.content-moderation-page {
+	padding: 2rem;
+}
+
+.content-moderation-page__header {
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 1.5rem;
+}
+
+.content-moderation-page__header h1 {
+	margin: 0;
+}
+
+.content-moderation-page__header p {
+	margin: 0.25rem 0 0;
+	color: #667085;
+}
+
+.content-moderation-page__filters {
+	display: flex;
+	gap: 0.75rem;
+	min-width: 24rem;
+}
+
+.content-moderation-page__table {
+	background: #fff;
+}
+
+.content-moderation-page__actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+}

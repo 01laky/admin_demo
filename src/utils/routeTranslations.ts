@@ -7,6 +7,7 @@ const routeKeys: Record<string, string> = {
 	dashboard: 'routes.dashboard',
 	users: 'routes.users',
 	faces: 'routes.faces',
+	moderation: 'routes.moderation',
 	chat: 'routes.chat',
 };
 
@@ -17,6 +18,7 @@ const routeKeyToEnglish: Record<string, string> = {
 	'routes.dashboard': 'dashboard',
 	'routes.users': 'users',
 	'routes.faces': 'faces',
+	'routes.moderation': 'moderation',
 	'routes.chat': 'chat',
 };
 

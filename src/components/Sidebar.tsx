@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useLocalizedLink } from '../hooks/useLocalizedLink';
 import { useAuth } from '../contexts/AuthContext';
+import { isSuperAdminFromToken } from '../utils/contentModeration';
 import './Sidebar.scss';
 
 interface NavItem {
@@ -17,7 +18,7 @@ export function Sidebar() {
 	const location = useLocation();
 	const { t } = useTranslation('common');
 	const getLocalizedPath = useLocalizedLink();
-	const { user } = useAuth();
+	const { user, token } = useAuth();
 
 	const navItems: NavItem[] = [
 		{
@@ -35,6 +36,15 @@ export function Sidebar() {
 			labelKey: 'pages.faces.title',
 			icon: '😀',
 		},
+		...(isSuperAdminFromToken(token)
+			? [
+					{
+						path: '/moderation',
+						labelKey: 'pages.moderation.title',
+						icon: '🛡',
+					},
+				]
+			: []),
 		// Add more navigation items here
 	];
 

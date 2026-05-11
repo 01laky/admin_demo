@@ -2,7 +2,15 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getAllRouteTranslations } from '../utils/routeTranslations';
 
-const ROUTE_IDS = ['login', 'dashboard', 'homepage', 'users', 'faces', 'chat'] as const;
+const ROUTE_IDS = [
+	'login',
+	'dashboard',
+	'homepage',
+	'users',
+	'faces',
+	'moderation',
+	'chat',
+] as const;
 
 export type AdminRouteId = (typeof ROUTE_IDS)[number];
 

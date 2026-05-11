@@ -14,6 +14,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useLocalizedLink } from '../hooks/useLocalizedLink';
+import { isSuperAdminFromToken } from '../utils/contentModeration';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import './AdminLayout.scss';
@@ -31,6 +32,10 @@ const NAV_ITEMS: NavItem[] = [
 	{ path: '/chat', labelKey: 'pages.chat.title', icon: '💬' },
 ];
 
+const SUPER_ADMIN_NAV_ITEMS: NavItem[] = [
+	{ path: '/moderation', labelKey: 'pages.moderation.title', icon: '🛡' },
+];
+
 const DESKTOP_BREAKPOINT = 1024;
 
 interface AdminLayoutProps {
@@ -43,9 +48,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const { t } = useTranslation('common');
-	const { user, logout } = useAuth();
+	const { user, logout, token } = useAuth();
 	const getLocalizedPath = useLocalizedLink();
 	const reduceMotion = useReducedMotion();
+	const navItems = isSuperAdminFromToken(token)
+		? [...NAV_ITEMS, ...SUPER_ADMIN_NAV_ITEMS]
+		: NAV_ITEMS;
 
 	// Detect screen size
 	const handleResize = useCallback(() => {
@@ -163,7 +171,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 				</div>
 
 				<nav className="admin-sidebar__nav">
-					{NAV_ITEMS.map((item) => {
+					{navItems.map((item) => {
 						const localizedPath = getLocalizedPath(item.path);
 						const isActive =
 							location.pathname.includes(item.path) ||
