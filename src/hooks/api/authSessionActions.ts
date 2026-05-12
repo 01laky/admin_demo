@@ -1,6 +1,6 @@
 /**
  * Auth/session side effects kept outside `useAuthApi` so the same flows are testable with injected
- * `Storage` and without mounting React Query. Mirrors `fe_demo/src/hooks/api/authSessionActions.ts`.
+ * `Storage` and without mounting React Query. Mirrors `many_faces_portal/src/hooks/api/authSessionActions.ts`.
  *
  * Keys written to browser storage: `auth_token`, `auth_refresh_token`, and `auth_user` (the latter is
  * cleared when the access token is rejected as expired in `readAuthTokenQueryValue`).

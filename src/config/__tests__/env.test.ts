@@ -1,6 +1,6 @@
 /**
  * Validates `collectEnvValidationErrors` for admin defaults (different `defaultFacePrefix` / Seq defaults
- * than public fe_demo, but the same URL + OAuth required-field rules apply).
+ * than public many_faces_portal, but the same URL + OAuth required-field rules apply).
  */
 import { describe, it, expect } from 'vitest';
 import { collectEnvValidationErrors, type EnvConfig } from '../env';

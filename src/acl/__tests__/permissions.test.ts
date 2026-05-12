@@ -1,12 +1,12 @@
 /**
- * Admin subset of ACL parsing tests — mirrors **fe_demo** `permissions.test.ts` contracts the admin SPA
+ * Admin subset of ACL parsing tests — mirrors **many_faces_portal** `permissions.test.ts` contracts the admin SPA
  * relies on (`parseMeCapabilities`, `hasPermission`, platform role helpers).
  */
 import { describe, expect, it } from 'vitest';
 import { ACL_PERMISSION_KEYS, ALL_ACL_PERMISSION_KEYS_SORTED } from '../aclPermissionKeys';
 import { canPlatformAdmin, hasPermission, parseMeCapabilities } from '../permissions';
 
-/** Same contract as fe_demo: safe parsing of GET /api/me/capabilities JSON (security-hardening prompt). */
+/** Same contract as many_faces_portal: safe parsing of GET /api/me/capabilities JSON (security-hardening prompt). */
 describe('parseMeCapabilities', () => {
 	it('returns null for invalid payloads', () => {
 		expect(parseMeCapabilities(null)).toBeNull();

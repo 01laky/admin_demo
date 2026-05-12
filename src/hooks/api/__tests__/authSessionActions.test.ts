@@ -1,5 +1,5 @@
 /**
- * Admin SPA auth/session action tests — identical scenarios to **fe_demo** `authSessionActions.test.ts`
+ * Admin SPA auth/session action tests — identical scenarios to **many_faces_portal** `authSessionActions.test.ts`
  * to catch drift between duplicated modules in the two bundles.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

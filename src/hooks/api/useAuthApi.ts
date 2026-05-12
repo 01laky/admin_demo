@@ -10,7 +10,7 @@ import {
 } from './authSessionActions';
 
 /**
- * Admin SPA auth hooks — same architecture as `fe_demo/src/hooks/api/useAuthApi.ts`:
+ * Admin SPA auth hooks — same architecture as `many_faces_portal/src/hooks/api/useAuthApi.ts`:
  * OAuth2 password + refresh flows live in `authSessionActions`, while this file wires them into
  * TanStack Query (`setQueryData`, `invalidateQueries`, `removeQueries`).
  */
@@ -22,7 +22,7 @@ export const authKeys = {
 	token: () => [...authKeys.all, 'token'] as const,
 };
 
-/** Same as fe_demo: avoid stale React Query cache after refresh failure (security hardening §13). */
+/** Same as many_faces_portal: avoid stale React Query cache after refresh failure (security hardening §13). */
 export function clearAuthAndCapabilitiesQueries(queryClient: QueryClient): void {
 	queryClient.removeQueries({ queryKey: authKeys.all });
 	queryClient.removeQueries({ queryKey: meCapabilitiesKeys.all });

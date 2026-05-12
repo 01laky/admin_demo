@@ -1,5 +1,5 @@
 /**
- * Ensures admin `clearAuthAndCapabilitiesQueries` wipes the same React Query roots as fe_demo after
+ * Ensures admin `clearAuthAndCapabilitiesQueries` wipes the same React Query roots as many_faces_portal after
  * refresh failure or logout (prevents stale capability-driven navigation).
  */
 import { describe, it, expect } from 'vitest';

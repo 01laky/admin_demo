@@ -1,6 +1,6 @@
 /**
  * Tests the thin `request()` wrappers exported beside `usePageTypesApi` hooks — mocks the generated
- * OpenAPI transport so we assert JSON payloads + verbs without running be_demo.
+ * OpenAPI transport so we assert JSON payloads + verbs without running many_faces_backend.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createPageType, updatePageType, deletePageType } from '../usePageTypesApi';

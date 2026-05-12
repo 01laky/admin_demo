@@ -1,10 +1,10 @@
-# admin_demo — performance & data layer appendix
+# many_faces_admin — performance & data layer appendix
 
-Companion to [`docs/prompts/admin-performance-and-refactor-agent-prompt.md`](../../docs/prompts/admin-performance-and-refactor-agent-prompt.md). **`fe_demo` mirror:** [`fe_demo/docs/performance-and-query-appendix.md`](../../fe_demo/docs/performance-and-query-appendix.md). Copy sections into a PR as evidence or waivers.
+Companion to [`docs/prompts/admin-performance-and-refactor-agent-prompt.md`](../../docs/prompts/admin-performance-and-refactor-agent-prompt.md). **`many_faces_portal` mirror:** [`many_faces_portal/docs/performance-and-query-appendix.md`](../../many_faces_portal/docs/performance-and-query-appendix.md). Copy sections into a PR as evidence or waivers.
 
 ## Node / toolchain
 
-- **Vite 8:** Node **20.19+** or **22.12+** (see `package.json` `engines` and `admin_demo/.nvmrc`).
+- **Vite 8:** Node **20.19+** or **22.12+** (see `package.json` `engines` and `many_faces_admin/.nvmrc`).
 - Optional: `yarn check-node` before `yarn build` / `yarn validate`.
 
 ## TanStack Query — defaults vs hooks
@@ -29,7 +29,7 @@ No other production components call **`useMeCapabilities`** directly; capability
 
 ## Session expiry & logout (source of truth)
 
-1. **`setupAxiosInterceptors`** (`interceptors.ts`): **401** → refresh queue → on failure **`forceLogout`**, redirect to login, **`setAuthToken(null)`**. No `window` `auth:unauthorized` event in admin_demo.
+1. **`setupAxiosInterceptors`** (`interceptors.ts`): **401** → refresh queue → on failure **`forceLogout`**, redirect to login, **`setAuthToken(null)`**. No `window` `auth:unauthorized` event in many_faces_admin.
 2. **`AuthContext`**: `localStorage` bootstrap, **`setInterval`** expiry check (paused while `document.visibilityState === 'hidden'`, re-check on `visibilitychange`).
 3. **React Query**: **`useAuthToken`**; logout paths remove **`meCapabilities`** (and related) queries.
 

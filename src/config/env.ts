@@ -1,5 +1,5 @@
 /**
- * Admin SPA bridge over Vite `import.meta.env`. Mirrors `fe_demo/src/config/env.ts` shape so the same
+ * Admin SPA bridge over Vite `import.meta.env`. Mirrors `many_faces_portal/src/config/env.ts` shape so the same
  * validation helpers (`collectEnvValidationErrors`) can be reused, but defaults differ:
  * - **`defaultFacePrefix`** is typically `admin` so API traffic is namespaced under `/admin/api/...`.
  * - **`seqUrl`** defaults to an absolute Seq URL (admin demo enables Seq logging by default); there is
@@ -68,7 +68,7 @@ export const env: EnvConfig = {
 	debugMode: getBoolEnv('VITE_DEBUG_MODE', false),
 };
 
-/** Same contract as fe_demo: pure validation list for tests + `validateEnv`. */
+/** Same contract as many_faces_portal: pure validation list for tests + `validateEnv`. */
 export function collectEnvValidationErrors(cfg: EnvConfig): string[] {
 	const errors: string[] = [];
 
@@ -97,7 +97,7 @@ export function collectEnvValidationErrors(cfg: EnvConfig): string[] {
 	return errors;
 }
 
-/** Logs configuration problems; throws in **production** builds only (mirrors fe_demo behavior). */
+/** Logs configuration problems; throws in **production** builds only (mirrors many_faces_portal behavior). */
 export function validateEnv(): void {
 	const errors = collectEnvValidationErrors(env);
 

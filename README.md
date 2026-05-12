@@ -48,7 +48,7 @@ Admin users configure the data model that the backend stores and the frontend la
 
 ```mermaid
 flowchart LR
-    operator["Admin / Operator"] --> admin["admin_demo<br/>React admin panel"]
+    operator["Admin / Operator"] --> admin["many_faces_admin<br/>React admin panel"]
     admin --> auth["ProtectedRoute<br/>OAuth2 / JWT"]
     auth --> caps["/me/capabilities<br/>role + permission state"]
 
@@ -139,7 +139,7 @@ flowchart TD
 ## Project Structure
 
 ```
-admin_demo/
+many_faces_admin/
 ├── src/
 │   ├── api/                # Auto-generated API client
 │   │   ├── services/       # API service classes
@@ -363,7 +363,7 @@ The admin panel provides custom hooks for API operations:
 
 ## Development Workflow
 
-1. **Start backend**: Ensure backend API is running (via **many_faces_backend** / `be_demo/` or monorepo `./scripts/start-all-dev.sh`)
+1. **Start backend**: Ensure backend API is running (via **many_faces_backend** / `many_faces_backend/` or monorepo `./scripts/start-all-dev.sh`)
 
 2. **Start admin panel**: Run `./start-dev.sh` or use monorepo `./scripts/start-all-dev.sh` to start all services
 
@@ -446,12 +446,12 @@ Output will be in `dist/` directory, ready for deployment.
 
 ## Integration with Root Project
 
-This admin panel is part of the **`many_faces_main`** monorepo (`admin_demo/` submodule on GitHub: `many_faces_admin`) and integrates with:
+This admin panel is part of the **`many_faces_main`** monorepo (`many_faces_admin/` submodule on GitHub: `many_faces_admin`) and integrates with:
 
-- **Backend API**: **many_faces_backend** (`be_demo/`, ASP.NET Core)
-- **Database**: **many_faces_database** (`db_demo/`, PostgreSQL) — via backend
-- **Redis**: **many_faces_redis** (`redis_demo/`) — job queue via backend
-- **Frontend**: **many_faces_portal** (`fe_demo/`, user-facing application)
+- **Backend API**: **many_faces_backend** (`many_faces_backend/`, ASP.NET Core)
+- **Database**: **many_faces_database** (`many_faces_database/`, PostgreSQL) — via backend
+- **Redis**: **many_faces_redis** (`many_faces_redis/`) — job queue via backend
+- **Frontend**: **many_faces_portal** (`many_faces_portal/`, user-facing application)
 
 Use root-level scripts to manage all services:
 
