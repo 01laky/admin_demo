@@ -88,7 +88,7 @@ flowchart TD
     preserve --> serialize["JSON.stringify(gridSchema)"]
     serialize --> save["updatePage mutation"]
     save --> invalidate["Invalidate page / pages / face queries"]
-    invalidate --> frontend["fe_demo reads schema<br/>PageGridLayout renders blocks"]
+    invalidate --> frontend["many_faces_portal reads schema<br/>PageGridLayout renders blocks"]
 ```
 
 ## Features
@@ -363,7 +363,7 @@ The admin panel provides custom hooks for API operations:
 
 ## Development Workflow
 
-1. **Start backend**: Ensure backend API is running (via `be_demo` or monorepo `./scripts/start-all-dev.sh`)
+1. **Start backend**: Ensure backend API is running (via **many_faces_backend** / `be_demo/` or monorepo `./scripts/start-all-dev.sh`)
 
 2. **Start admin panel**: Run `./start-dev.sh` or use monorepo `./scripts/start-all-dev.sh` to start all services
 
@@ -448,10 +448,10 @@ Output will be in `dist/` directory, ready for deployment.
 
 This admin panel is part of the **`many_faces_main`** monorepo (`admin_demo/` submodule on GitHub: `many_faces_admin`) and integrates with:
 
-- **Backend API**: `be_demo` (ASP.NET Core)
-- **Database**: `db_demo` (PostgreSQL) - via backend
-- **Redis**: `redis_demo` - job queue via backend
-- **Frontend**: `fe_demo` (separate user-facing application)
+- **Backend API**: **many_faces_backend** (`be_demo/`, ASP.NET Core)
+- **Database**: **many_faces_database** (`db_demo/`, PostgreSQL) — via backend
+- **Redis**: **many_faces_redis** (`redis_demo/`) — job queue via backend
+- **Frontend**: **many_faces_portal** (`fe_demo/`, user-facing application)
 
 Use root-level scripts to manage all services:
 
