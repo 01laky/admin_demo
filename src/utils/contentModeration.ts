@@ -11,6 +11,17 @@ export type AiReviewStatus =
 
 export type ModeratedContentType = 'Album' | 'Blog' | 'Reel';
 
+export const AI_REVIEW_STATUSES: Array<AiReviewStatus | ''> = [
+	'Queued',
+	'InProgress',
+	'RecommendedApprove',
+	'RecommendedReject',
+	'NeedsHumanReview',
+	'Failed',
+	'NotQueued',
+	'',
+];
+
 export function isSuperAdminFromToken(token: string | null | undefined) {
 	if (!token) return false;
 	try {
@@ -42,4 +53,22 @@ export function getModerationQueueLabel(
 		return 'Needs human review';
 	}
 	return approvalStatus.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
+export function parseModerationFlags(flagsJson: string | null | undefined) {
+	if (!flagsJson) return [];
+	try {
+		const parsed = JSON.parse(flagsJson);
+		return Array.isArray(parsed)
+			? parsed.filter((flag): flag is string => typeof flag === 'string')
+			: [];
+	} catch {
+		return [];
+	}
+}
+
+export function formatOptionalDate(value: string | null | undefined) {
+	if (!value) return 'Not set';
+	const date = new Date(value);
+	return Number.isNaN(date.getTime()) ? 'Invalid date' : date.toLocaleString();
 }

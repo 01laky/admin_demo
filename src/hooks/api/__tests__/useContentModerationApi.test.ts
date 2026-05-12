@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { applyModerationDecision, fetchModerationItems } from '../useContentModerationApi';
+import {
+	applyModerationDecision,
+	fetchModerationEvents,
+	fetchModerationItems,
+	fetchModerationMetrics,
+} from '../useContentModerationApi';
 
 const mockRequest = vi.fn();
 
@@ -45,6 +50,34 @@ describe('useContentModerationApi requests', () => {
 				method: 'POST',
 				url: '/api/contentmoderation/Blog/12/approve',
 				body: { reason: 'Looks good' },
+			})
+		);
+	});
+
+	it('fetches moderation events for detail history', async () => {
+		mockRequest.mockResolvedValue([]);
+
+		await fetchModerationEvents('Reel', 44);
+
+		expect(mockRequest).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.objectContaining({
+				method: 'GET',
+				url: '/api/contentmoderation/Reel/44/events',
+			})
+		);
+	});
+
+	it('fetches moderation metrics', async () => {
+		mockRequest.mockResolvedValue({ pendingSubmissions: 0 });
+
+		await fetchModerationMetrics();
+
+		expect(mockRequest).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.objectContaining({
+				method: 'GET',
+				url: '/api/contentmoderation/metrics',
 			})
 		);
 	});

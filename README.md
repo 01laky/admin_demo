@@ -32,7 +32,7 @@ From an engineering perspective, this submodule demonstrates a modern React admi
 
 The admin portal includes a first `Moderation` area for reviewing FE user-created albums, blogs, and reels. The view is intended for `SUPER_ADMIN` users only in the current phase and mirrors backend enforcement: `ADMIN` and `FACE_ADMIN` are intentionally excluded from approve, reject, and remove actions.
 
-The page uses typed moderation API hooks, localized routing, and safe display helpers for approval and AI review states. It can filter the queue by content type and approval status, show key metadata such as face, author, AI status, and confidence, and send approve/reject/remove decisions with a reason. The backend remains the source of truth for permissions and audit events.
+The page uses typed moderation API hooks, localized routing, and safe display helpers for approval and AI review states. It can filter the queue by content type, approval status, and AI status; show operational counters; display key metadata such as face, author, AI status, confidence, risk, flags, model version, and trace id; open a detail/audit history panel; and send approve/reject/remove decisions with a reason. The backend remains the source of truth for permissions and audit events.
 
 ## Admin Configuration Flow
 

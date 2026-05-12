@@ -3,12 +3,18 @@ import { Alert, Button, Form, Spinner, Table } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import {
 	useModerationAction,
+	useModerationEvents,
+	useModerationMetrics,
 	useModerationItems,
 	type ModerationItem,
 } from '../hooks/api/useContentModerationApi';
 import {
+	AI_REVIEW_STATUSES,
+	formatOptionalDate,
 	getModerationQueueLabel,
 	isSuperAdminFromToken,
+	parseModerationFlags,
+	type AiReviewStatus,
 	type ContentApprovalStatus,
 	type ModeratedContentType,
 } from '../utils/contentModeration';
@@ -31,13 +37,18 @@ export function ContentModerationPage() {
 	const [approvalStatus, setApprovalStatus] = useState<ContentApprovalStatus | ''>(
 		'PendingApproval'
 	);
+	const [aiReviewStatus, setAiReviewStatus] = useState<AiReviewStatus | ''>('');
+	const [selectedItem, setSelectedItem] = useState<ModerationItem | null>(null);
 	const [reasonByItem, setReasonByItem] = useState<Record<string, string>>({});
 
 	const filters = {
 		contentType: contentType || undefined,
 		approvalStatus: approvalStatus || undefined,
+		aiReviewStatus: aiReviewStatus || undefined,
 	};
 	const { data, isLoading, error } = useModerationItems(filters, isSuperAdmin);
+	const { data: metrics } = useModerationMetrics(isSuperAdmin);
+	const { data: events, isLoading: eventsLoading } = useModerationEvents(selectedItem);
 	const action = useModerationAction();
 
 	if (!isSuperAdmin) {
@@ -91,8 +102,40 @@ export function ContentModerationPage() {
 							</option>
 						))}
 					</Form.Select>
+					<Form.Select
+						aria-label="AI review status"
+						value={aiReviewStatus}
+						onChange={(event) => setAiReviewStatus(event.target.value as AiReviewStatus | '')}
+					>
+						{AI_REVIEW_STATUSES.map((value) => (
+							<option key={value || 'all'} value={value}>
+								{value ? value.replace(/([a-z])([A-Z])/g, '$1 $2') : 'All AI states'}
+							</option>
+						))}
+					</Form.Select>
 				</div>
 			</div>
+
+			{metrics && (
+				<div className="content-moderation-page__metrics" aria-label="Moderation metrics">
+					<div>
+						<strong>{metrics.pendingSubmissions}</strong>
+						<span>Pending</span>
+					</div>
+					<div>
+						<strong>{metrics.aiQueuedJobs}</strong>
+						<span>AI queued</span>
+					</div>
+					<div>
+						<strong>{metrics.aiProcessingJobs}</strong>
+						<span>AI processing</span>
+					</div>
+					<div>
+						<strong>{metrics.aiFailedJobs}</strong>
+						<span>AI failed</span>
+					</div>
+				</div>
+			)}
 
 			{isLoading && <Spinner animation="border" />}
 			{error && <Alert variant="danger">Failed to load moderation queue.</Alert>}
@@ -124,6 +167,8 @@ export function ContentModerationPage() {
 									{item.aiReviewStatus}
 									{item.aiReviewConfidence != null &&
 										` (${Math.round(item.aiReviewConfidence * 100)}%)`}
+									{parseModerationFlags(item.aiReviewFlagsJson).length > 0 &&
+										` - ${parseModerationFlags(item.aiReviewFlagsJson).join(', ')}`}
 								</td>
 								<td>
 									<Form.Control
@@ -136,6 +181,13 @@ export function ContentModerationPage() {
 									/>
 								</td>
 								<td className="content-moderation-page__actions">
+									<Button
+										size="sm"
+										variant="outline-secondary"
+										onClick={() => setSelectedItem(item)}
+									>
+										Details
+									</Button>
 									<Button size="sm" variant="success" onClick={() => runAction(item, 'approve')}>
 										Approve
 									</Button>
@@ -156,6 +208,61 @@ export function ContentModerationPage() {
 					)}
 				</tbody>
 			</Table>
+
+			{selectedItem && (
+				<section className="content-moderation-page__detail" aria-label="Moderation detail">
+					<div className="content-moderation-page__detail-header">
+						<div>
+							<h2>
+								{selectedItem.contentType}: {selectedItem.title}
+							</h2>
+							<p>
+								Submitted {formatOptionalDate(selectedItem.submittedAtUtc)} by{' '}
+								{selectedItem.creatorName.trim() || selectedItem.creatorId}
+							</p>
+						</div>
+						<Button variant="outline-secondary" size="sm" onClick={() => setSelectedItem(null)}>
+							Close
+						</Button>
+					</div>
+					<div className="content-moderation-page__detail-grid">
+						<div>
+							<h3>AI recommendation</h3>
+							<p>Status: {selectedItem.aiReviewStatus}</p>
+							<p>Decision: {selectedItem.aiReviewDecision}</p>
+							<p>Risk: {selectedItem.aiReviewRiskLevel}</p>
+							<p>
+								Flags: {parseModerationFlags(selectedItem.aiReviewFlagsJson).join(', ') || 'None'}
+							</p>
+							<p>Reason: {selectedItem.aiReviewReason || 'No AI reason yet.'}</p>
+							<p>User message: {selectedItem.aiReviewUserMessage || 'Not set'}</p>
+							<p>Model: {selectedItem.aiReviewModelVersion || 'Not set'}</p>
+							<p>Trace: {selectedItem.aiReviewTraceId || 'Not set'}</p>
+						</div>
+						<div>
+							<h3>Human moderation</h3>
+							<p>Status: {selectedItem.approvalStatus}</p>
+							<p>Reviewed: {formatOptionalDate(selectedItem.humanReviewedAtUtc)}</p>
+							<p>Decision reason: {selectedItem.humanDecisionReason || 'Not set'}</p>
+							<p>Removed: {formatOptionalDate(selectedItem.removedAtUtc)}</p>
+							<p>Removal reason: {selectedItem.removalReason || 'Not set'}</p>
+						</div>
+					</div>
+					<h3>Audit history</h3>
+					{eventsLoading && <Spinner animation="border" size="sm" />}
+					<ul className="content-moderation-page__events">
+						{(events ?? []).map((event) => (
+							<li key={event.id}>
+								<strong>{formatOptionalDate(event.createdAtUtc)}</strong> {event.actorType}:{' '}
+								{event.oldApprovalStatus || '-'} / {event.oldAiReviewStatus || '-'} to{' '}
+								{event.newApprovalStatus || '-'} / {event.newAiReviewStatus || '-'}
+								{event.reason && <span> - {event.reason}</span>}
+							</li>
+						))}
+						{!eventsLoading && (events ?? []).length === 0 && <li>No audit events yet.</li>}
+					</ul>
+				</section>
+			)}
 		</div>
 	);
 }

@@ -33,6 +33,32 @@ export interface ModerationItem {
 	createdAt: string;
 }
 
+export interface ModerationEvent {
+	id: number;
+	contentType: ModeratedContentType;
+	contentId: number;
+	faceId: number;
+	oldApprovalStatus?: ContentApprovalStatus | null;
+	newApprovalStatus?: ContentApprovalStatus | null;
+	oldAiReviewStatus?: AiReviewStatus | null;
+	newAiReviewStatus?: AiReviewStatus | null;
+	actorType: string;
+	actorUserId?: string | null;
+	reason?: string | null;
+	userMessage?: string | null;
+	aiTraceId?: string | null;
+	aiModelVersion?: string | null;
+	createdAtUtc: string;
+}
+
+export interface ModerationMetrics {
+	pendingSubmissions: number;
+	aiQueuedJobs: number;
+	aiProcessingJobs: number;
+	aiFailedJobs: number;
+	oldestPendingSubmissionUtc?: string | null;
+}
+
 export interface ModerationFilters {
 	contentType?: ModeratedContentType;
 	approvalStatus?: ContentApprovalStatus;
@@ -48,6 +74,9 @@ export interface ModerationDecision {
 const moderationKeys = {
 	all: ['contentModeration'] as const,
 	list: (filters: ModerationFilters) => [...moderationKeys.all, 'list', filters] as const,
+	events: (contentType: ModeratedContentType, contentId: number) =>
+		[...moderationKeys.all, 'events', contentType, contentId] as const,
+	metrics: () => [...moderationKeys.all, 'metrics'] as const,
 };
 
 export async function fetchModerationItems(filters: ModerationFilters = {}) {
@@ -69,6 +98,20 @@ export async function applyModerationDecision(
 		url: `/api/contentmoderation/${contentType}/${contentId}/${action}`,
 		body: decision,
 	});
+}
+
+export async function fetchModerationEvents(contentType: ModeratedContentType, contentId: number) {
+	return __request(OpenAPI, {
+		method: 'GET',
+		url: `/api/contentmoderation/${contentType}/${contentId}/events`,
+	}) as Promise<ModerationEvent[]>;
+}
+
+export async function fetchModerationMetrics() {
+	return __request(OpenAPI, {
+		method: 'GET',
+		url: '/api/contentmoderation/metrics',
+	}) as Promise<ModerationMetrics>;
 }
 
 export function useModerationItems(filters: ModerationFilters = {}, enabled = true) {
@@ -93,5 +136,27 @@ export function useModerationAction() {
 			decision?: ModerationDecision;
 		}) => applyModerationDecision(item.contentType, item.contentId, action, decision),
 		onSuccess: () => queryClient.invalidateQueries({ queryKey: moderationKeys.all }),
+	});
+}
+
+export function useModerationEvents(
+	item: Pick<ModerationItem, 'contentType' | 'contentId'> | null
+) {
+	return useQuery({
+		queryKey: item
+			? moderationKeys.events(item.contentType, item.contentId)
+			: [...moderationKeys.all, 'events', 'none'],
+		queryFn: () => fetchModerationEvents(item!.contentType, item!.contentId),
+		enabled: Boolean(item),
+		staleTime: 15_000,
+	});
+}
+
+export function useModerationMetrics(enabled = true) {
+	return useQuery({
+		queryKey: moderationKeys.metrics(),
+		queryFn: fetchModerationMetrics,
+		enabled,
+		staleTime: 30_000,
 	});
 }

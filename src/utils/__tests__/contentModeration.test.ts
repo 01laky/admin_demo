@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { getModerationQueueLabel, isSuperAdminFromToken } from '../contentModeration';
+import {
+	formatOptionalDate,
+	getModerationQueueLabel,
+	isSuperAdminFromToken,
+	parseModerationFlags,
+} from '../contentModeration';
 
 function makeToken(payload: Record<string, unknown>) {
 	return `header.${btoa(JSON.stringify(payload))}.signature`;
@@ -21,5 +26,17 @@ describe('admin content moderation helpers', () => {
 		['Removed', 'Failed', 'Removed'],
 	] as const)('maps %s/%s to queue label', (approvalStatus, aiReviewStatus, expected) => {
 		expect(getModerationQueueLabel(approvalStatus, aiReviewStatus)).toBe(expected);
+	});
+
+	it('parses moderation flags safely', () => {
+		expect(parseModerationFlags('["spam","adult",1]')).toEqual(['spam', 'adult']);
+		expect(parseModerationFlags('not-json')).toEqual([]);
+		expect(parseModerationFlags(null)).toEqual([]);
+	});
+
+	it('formats optional dates without throwing', () => {
+		expect(formatOptionalDate(null)).toBe('Not set');
+		expect(formatOptionalDate('not-date')).toBe('Invalid date');
+		expect(formatOptionalDate('2026-05-12T10:00:00Z')).toContain('2026');
 	});
 });
