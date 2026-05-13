@@ -22,6 +22,7 @@ import {
 	EditPagePage,
 	PageDetailPage,
 	ChatPage,
+	SettingsPage,
 } from './lazyAdminPages';
 import { RouteLoadingFallback } from './RouteLoadingFallback';
 import { useAdminRoutePaths } from './useAdminRoutePaths';
@@ -38,6 +39,7 @@ export function AppRoutes() {
 		faces: facesPaths,
 		moderation: moderationPaths,
 		chat: chatPaths,
+		settings: settingsPaths,
 	} = useAdminRoutePaths();
 
 	useEffect(() => {
@@ -239,6 +241,16 @@ export function AppRoutes() {
 							path={path}
 							element={
 								<ProtectedRoute redirectTo="login">{withLayout(<ChatPage />)}</ProtectedRoute>
+							}
+						/>
+					))}
+
+					{settingsPaths.map((path) => (
+						<Route
+							key={path}
+							path={path}
+							element={
+								<ProtectedRoute redirectTo="login">{withLayout(<SettingsPage />)}</ProtectedRoute>
 							}
 						/>
 					))}

@@ -10,6 +10,7 @@ import { isSuperAdminFromToken } from '../utils/contentModeration';
 import { DashboardCharts } from '../components/dashboard/DashboardCharts';
 import { DashboardModerationWidget } from '../components/dashboard/DashboardModerationWidget';
 import { DashboardMetricsTable } from '../components/dashboard/DashboardMetricsTable';
+import { DashboardAiStatsPanel } from '../components/dashboard/DashboardAiStatsPanel';
 import './DashboardPage.scss';
 
 /**
@@ -132,6 +133,8 @@ export function DashboardPage() {
 						enabled={Boolean(token) && statsQuery.isSuccess}
 					/>
 				)}
+
+				<DashboardAiStatsPanel />
 
 				<DashboardModerationWidget enabled={Boolean(isSuperAdmin && token)} />
 

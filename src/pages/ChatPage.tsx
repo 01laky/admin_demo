@@ -3,6 +3,7 @@ import type { HubConnection } from '@microsoft/signalr';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { buildAdminAiChatHubConnection } from '../api/signalr/buildAdminAiChatHubConnection';
+import { getAdminAiPublicStatsMode } from '../utils/adminAiStatsSettings';
 import { Button } from '../components/radix/Button';
 import './ChatPage.scss';
 
@@ -137,10 +138,11 @@ export function ChatPage() {
 		setInput('');
 		setIsSending(true);
 		const history = buildHistory(messages);
+		const statsMode = getAdminAiPublicStatsMode();
 		const timeoutMs = 360_000; // 6 min (first request may load model)
 		try {
 			await Promise.race([
-				conn.invoke('SendToAi', text, history),
+				conn.invoke('SendToAiWithOperatorStats', text, history, statsMode),
 				new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeoutMs)),
 			]);
 		} catch (err) {

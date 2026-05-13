@@ -65,5 +65,17 @@ export function scopePathForCurrentFace(path: string): string {
 }
 
 export function absoluteScopedUrl(path: string): string {
-  return `${env.apiUrl.replace(/\/$/, '')}${scopePathForCurrentFace(path)}`;
+	return `${env.apiUrl.replace(/\/$/, '')}${scopePathForCurrentFace(path)}`;
+}
+
+/** Same as {@link scopePathForCurrentFace} but pinned to the `public` face (anonymous-safe API routes). */
+export function scopePathForPublicFace(path: string): string {
+	const rel = path.startsWith('/') ? path : `/${path}`;
+	const withApi = prependFaceBeforeApi(rel, 'public');
+	if (withApi !== rel) return withApi;
+	return prependFaceBeforeHubs(rel, 'public');
+}
+
+export function absolutePublicFaceUrl(path: string): string {
+	return `${env.apiUrl.replace(/\/$/, '')}${scopePathForPublicFace(path)}`;
 }

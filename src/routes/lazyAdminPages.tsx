@@ -49,3 +49,6 @@ export const PageDetailPage = lazy(() =>
 export const ChatPage = lazy(() =>
 	import('../pages/ChatPage').then((m) => ({ default: m.ChatPage }))
 );
+export const SettingsPage = lazy(() =>
+	import('../pages/SettingsPage').then((m) => ({ default: m.SettingsPage }))
+);

@@ -45,7 +45,16 @@ export function Sidebar() {
 					},
 				]
 			: []),
-		// Add more navigation items here
+		{
+			path: '/chat',
+			labelKey: 'pages.chat.title',
+			icon: '💬',
+		},
+		{
+			path: '/settings',
+			labelKey: 'pages.settings.title',
+			icon: '⚙️',
+		},
 	];
 
 	const sidebarVariants = {

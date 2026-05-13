@@ -13,7 +13,8 @@
 		"users": "uzivatele",
 		"faces": "tvare",
 		"moderation": "moderace",
-		"chat": "chat"
+		"chat": "chat",
+		"settings": "nastaveni"
 	},
 	"pages": {
 		"login": {
@@ -77,6 +78,20 @@
 					"pending": "Čekající",
 					"accepted": "Přijaté",
 					"rejected": "Zamítnuté"
+				}
+			},
+			"aiStats": {
+				"title": "AI a veřejné agregáty",
+				"openSettings": "Nastavení",
+				"modeLabel": "Statistiky v AI chatu",
+				"offHint": "V nastavení zapněte inline nebo live režim pro anonymní součty platformy v operátorském AI chatu.",
+				"loading": "Načítám veřejný agregovaný snímek…",
+				"loadError": "Nepodařilo se načíst anonymní veřejné statistiky.",
+				"fields": {
+					"users": "Uživatelé",
+					"faces": "Tváře",
+					"messages": "Zprávy",
+					"stories": "Příběhy"
 				}
 			},
 			"moderationWidget": {
@@ -488,6 +503,26 @@
 			"you": "Vy",
 			"ai": "AI",
 			"timeoutError": "Vypršel čas požadavky. AI se ještě může načítat. Zkuste znovu za minutu."
+		},
+		"settings": {
+			"title": "Nastavení",
+			"lead": "Předvolby jen pro tento prohlížeč (uloženo v localStorage).",
+			"save": "Uložit",
+			"saved": "Uloženo.",
+			"aiStats": {
+				"sectionTitle": "AI chat — veřejné statistiky",
+				"description": "Určuje, zda operátorský AI chat dostane anonymní agregované počty (uživatelé, tváře, zprávy, …). Nejsou odesílány texty zpráv ani audit moderace.",
+				"modes": {
+					"off": "Vypnuto",
+					"inline": "Inline (z API serveru)",
+					"live": "Live (AI worker stáhne veřejný JSON)"
+				},
+				"hints": {
+					"off": "AI vidí jen váš dialog.",
+					"inline": "API vloží čerstvý JSON snímek do kontextu modelu při každém požadavku.",
+					"live": "Python worker před odpovědí provede HTTP GET na nakonfigurovanou veřejnou URL statistik."
+				}
+			}
 		}
 	},
 	"common": {

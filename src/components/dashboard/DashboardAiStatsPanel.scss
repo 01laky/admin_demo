@@ -1,0 +1,67 @@
+.dashboard-ai-stats {
+	margin: 1.5rem 0;
+	padding: 1.25rem 1.5rem;
+	border-radius: 12px;
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.06));
+	border: 1px solid rgba(148, 163, 184, 0.35);
+
+	&__head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	&__title {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+	}
+
+	&__settings-link {
+		font-size: 0.9rem;
+		text-decoration: none;
+		color: #2563eb;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&__mode {
+		margin: 0 0 0.75rem;
+		font-size: 0.95rem;
+	}
+
+	&__hint {
+		margin: 0;
+		font-size: 0.9rem;
+		&.muted {
+			color: #64748b;
+		}
+		&.error {
+			color: #b91c1c;
+		}
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		gap: 0.75rem 1.25rem;
+		margin: 0.5rem 0 0;
+
+		dt {
+			margin: 0;
+			font-size: 0.75rem;
+			text-transform: uppercase;
+			letter-spacing: 0.04em;
+			color: #64748b;
+		}
+		dd {
+			margin: 0.15rem 0 0;
+			font-size: 1.15rem;
+			font-weight: 600;
+		}
+	}
+}

@@ -13,7 +13,8 @@
 		"users": "users",
 		"faces": "faces",
 		"moderation": "moderation",
-		"chat": "chat"
+		"chat": "chat",
+		"settings": "settings"
 	},
 	"pages": {
 		"login": {
@@ -77,6 +78,20 @@
 					"pending": "Pending",
 					"accepted": "Accepted",
 					"rejected": "Rejected"
+				}
+			},
+			"aiStats": {
+				"title": "AI & public aggregates",
+				"openSettings": "Settings",
+				"modeLabel": "Statistics in AI chat",
+				"offHint": "Enable inline or live mode in Settings to attach anonymous platform totals to operator AI chat.",
+				"loading": "Loading public aggregate snapshot…",
+				"loadError": "Could not load anonymous public stats.",
+				"fields": {
+					"users": "Users",
+					"faces": "Faces",
+					"messages": "Messages",
+					"stories": "Stories"
 				}
 			},
 			"moderationWidget": {
@@ -491,6 +506,26 @@
 			"you": "You",
 			"ai": "AI",
 			"timeoutError": "Request timed out. The AI may still be loading. Please try again in a minute."
+		},
+		"settings": {
+			"title": "Settings",
+			"lead": "Preferences for this browser only (stored in localStorage).",
+			"save": "Save",
+			"saved": "Saved.",
+			"aiStats": {
+				"sectionTitle": "AI chat — public statistics",
+				"description": "Controls whether the operator AI chat receives anonymous aggregate counts (users, faces, messages, …). No private message bodies or moderation audit data are sent.",
+				"modes": {
+					"off": "Off",
+					"inline": "Inline (from API server)",
+					"live": "Live (AI worker fetches public JSON)"
+				},
+				"hints": {
+					"off": "AI sees only your typed conversation.",
+					"inline": "The API injects a fresh JSON snapshot into the model context on each request.",
+					"live": "The Python worker performs an HTTP GET of the configured public stats URL before answering (useful to validate the same path external tools would call)."
+				}
+			}
 		}
 	},
 	"common": {
