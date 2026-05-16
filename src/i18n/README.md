@@ -1,62 +1,47 @@
-# i18n Configuration
+# i18n (admin)
 
-This project uses `react-i18next` for internationalization support.
+This app uses **react-i18next** for UI copy and localized **admin routes** (`routes.*`).
 
-## Structure
+## Canonical documentation
 
-- `config.ts` - i18next configuration
-- `locales/` - Translation files directory
-  - `en.json` - English translations (default)
+**Architecture, Mermaid diagrams, CMS vs static:**
 
-## Usage
+- Monorepo: [`docs/guides/static-localization-and-i18n.md`](../../../docs/guides/static-localization-and-i18n.md)
+- Conventions: [`docs/guides/i18n-conventions.md`](../../../docs/guides/i18n-conventions.md)
 
-### In Components
+## Static UI (target)
+
+| Piece | Role |
+| ----- | ---- |
+| `config.ts` | i18next init from `GET /api/localization/admin` (async bootstrap in `main.tsx`) |
+| `../utils/routeTranslations.ts` | Localized path segments for React Router |
+| `../routes/useAdminRoutePaths.ts` | Builds multi-language route lists from `routes.*` |
+
+**Source of truth:** `many_faces_backend/BeDemo.Api/Localization/Admin/*.resx`.
+
+**Transitional:** `locales/{en,sk,cz}.json` until centralized static i18n is merged.
+
+## CMS page route translations (database)
+
+**Create Page** / **Edit Page** include **Route translations** fields (`en` / `sk` / `cz`). Those values are stored via `PUT /api/pages/{pageId}/translations` — **not** in the static localization API.
+
+Hooks: `src/hooks/api/usePageRouteTranslationsApi.ts`.
+
+## Usage in components
 
 ```tsx
 import { useTranslation } from 'react-i18next';
 
-function MyComponent() {
+function Example() {
 	const { t } = useTranslation('common');
-
-	return <h1>{t('welcome')}</h1>;
+	return <h1>{t('pages.login.title')}</h1>;
 }
 ```
 
-### With Interpolation
+## Adding or editing static copy
 
-```tsx
-const { t } = useTranslation('common');
-const count = 5;
+1. Edit **admin** `.resx` in `many_faces_backend`.
+2. Restart backend; hard refresh admin SPA.
+3. Keep `en` / `sk` / `cz` key parity (CI).
 
-return <p>{t('count', { count })}</p>;
-```
-
-### Change Language
-
-```tsx
-import { useTranslation } from 'react-i18next';
-
-function LanguageSwitcher() {
-	const { i18n } = useTranslation();
-
-	const changeLanguage = (lng: string) => {
-		i18n.changeLanguage(lng);
-	};
-
-	return <button onClick={() => changeLanguage('en')}>English</button>;
-}
-```
-
-## Adding New Languages
-
-1. Create a new JSON file in `locales/` (e.g., `sk.json`)
-2. Add the language to `supportedLngs` in `config.ts`
-3. Import and add to resources in `config.ts`
-
-## Default Language
-
-The default language is **English (en)**. The language is automatically detected from:
-
-1. localStorage (if previously set)
-2. Browser navigator
-3. HTML lang attribute
+For **page URL slugs**, use the page form in the UI — see monorepo guide.

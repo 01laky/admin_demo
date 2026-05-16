@@ -142,8 +142,10 @@ flowchart TD
   - Responsive design with sidebar navigation
 
 - **Internationalization (i18n)**
-  - Multi-language support (English, Slovak, Czech)
-  - Language switching in UI
+  - **Static UI copy** — `GET /api/localization/admin` at startup (backend `.resx`)
+  - **CMS page route translations** — Create/Edit Page form → `PageRouteTranslations` in DB (separate from static bundle)
+  - Languages: `en`, `sk`, `cz`; localized admin routes via `routes.*`
+  - **Full architecture (Mermaid):** [`docs/guides/static-localization-and-i18n.md`](../docs/guides/static-localization-and-i18n.md)
 
 - **API Integration**
   - Auto-generated API client from Swagger/OpenAPI
@@ -537,7 +539,7 @@ lsof -ti:8082 | xargs kill -9
 - **Editor Setup**: See `SETUP_EDITOR.md` for IDE configuration
 - **Yarn PnP**: See `YARN_PNP.md` for Yarn Plug'n'Play information
 - **API Client**: See `src/api/README.md` for API client documentation
-- **i18n**: See `src/i18n/README.md` for internationalization setup
+- **i18n**: [`docs/guides/static-localization-and-i18n.md`](../docs/guides/static-localization-and-i18n.md) (canonical) · `src/i18n/README.md` (code entrypoints)
 
 ## Central documentation (`many_faces_main`)
 
@@ -546,6 +548,7 @@ Inside the monorepo checkout, relative links such as [`../docs/guides/ai-assiste
 When viewing **only** this repository on GitHub, use the canonical monorepo URLs:
 
 - [Documentation hub](https://github.com/01laky/many_faces_main/blob/main/docs/README.md)
+- [Static localization and i18n](https://github.com/01laky/many_faces_main/blob/main/docs/guides/static-localization-and-i18n.md)
 - [AI-assisted content approval](https://github.com/01laky/many_faces_main/blob/main/docs/guides/ai-assisted-content-approval.md) (portal + mobile + backend + AI pipeline)
 - [Git submodules workflow](https://github.com/01laky/many_faces_main/blob/main/docs/guides/git-submodules.md)
 - [Development and CI](https://github.com/01laky/many_faces_main/blob/main/docs/guides/development.md)
