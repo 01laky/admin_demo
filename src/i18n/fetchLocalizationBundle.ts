@@ -1,3 +1,7 @@
+/**
+ * Fetches the admin static UI bundle from GET /api/localization/admin.
+ * Anonymous endpoint — required before login so CMS forms have labels.
+ */
 import { env } from '../config/env';
 
 export interface LocalizationBundleResponse {

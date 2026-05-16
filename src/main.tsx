@@ -1,3 +1,12 @@
+/**
+ * Admin SPA entry — bootstrap order matches portal (static i18n before authenticated API):
+ * 1. Validate environment
+ * 2. GET /api/localization/admin (anonymous, exempt from face prefix)
+ * 3. initI18n (all en/sk/cz preloaded)
+ * 4. configureApiClient + axios interceptors
+ * 5. Render React tree
+ */
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,12 +17,20 @@ import { setupAxiosInterceptors } from './api/interceptors';
 import { validateEnv, logEnvConfig, env } from './config/env';
 import { logger } from './utils/logger';
 import { QueryProvider } from './providers/QueryProvider';
+import { renderBootstrapError, renderBootstrapLoading } from './utils/bootstrapShell';
 import App from './App.tsx';
 
 validateEnv();
 logEnvConfig();
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
+	const rootEl = document.getElementById('root');
+	if (!rootEl) {
+		throw new Error('Missing #root element');
+	}
+
+	renderBootstrapLoading(rootEl);
+
 	try {
 		await initI18n();
 		configureApiClient();
@@ -25,7 +42,7 @@ async function bootstrap() {
 			Environment: env.environment,
 		});
 
-		createRoot(document.getElementById('root')!).render(
+		createRoot(rootEl).render(
 			<StrictMode>
 				<QueryProvider>
 					<App />
@@ -34,15 +51,9 @@ async function bootstrap() {
 		);
 	} catch (err) {
 		logger.error('Failed to bootstrap application', err);
-		const root = document.getElementById('root');
-		if (root) {
-			root.innerHTML =
-				'<div style="padding:2rem;font-family:system-ui">' +
-				'<h1>Could not load translations</h1>' +
-				'<p>Check API at <code>' +
-				env.apiUrl +
-				'</code> and refresh.</p></div>';
-		}
+		renderBootstrapError(rootEl, env.apiUrl, () => {
+			void bootstrap();
+		});
 	}
 }
 
