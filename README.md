@@ -553,3 +553,4 @@ When viewing **only** this repository on GitHub, use the canonical monorepo URLs
 - [AI-assisted content approval](https://github.com/01laky/many_faces_main/blob/main/docs/guides/ai-assisted-content-approval.md) (portal + mobile + backend + AI pipeline)
 - [Git submodules workflow](https://github.com/01laky/many_faces_main/blob/main/docs/guides/git-submodules.md)
 - [Development and CI](https://github.com/01laky/many_faces_main/blob/main/docs/guides/development.md)
+- [Mobile Expo client](https://github.com/01laky/many_faces_main/blob/main/docs/guides/mobile-expo-development.md) · [`many_faces_mobile`](https://github.com/01laky/many_faces_mobile) (read-only My submissions on device)
