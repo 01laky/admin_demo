@@ -23,4 +23,14 @@ describe('buildPasswordGrantTokenRequest', () => {
 		expect(req.clientId).toBe(base.clientId);
 		expect(req.clientSecret).toBe(base.clientSecret);
 	});
+
+	it('coerces truthy non-boolean rememberMe values to false', () => {
+		expect(
+			buildPasswordGrantTokenRequest({ ...base, rememberMe: 'true' as unknown as boolean })
+				.rememberMe
+		).toBe(false);
+		expect(
+			buildPasswordGrantTokenRequest({ ...base, rememberMe: 1 as unknown as boolean }).rememberMe
+		).toBe(false);
+	});
 });

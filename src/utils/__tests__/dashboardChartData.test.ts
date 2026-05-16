@@ -6,6 +6,11 @@ import {
 } from '../dashboardChartData';
 
 describe('mergeTimeseriesForMultiLineChart', () => {
+	it('returns empty array when both series have no buckets', () => {
+		const empty = { metric: 'x', bucket: 'day', buckets: [] };
+		expect(mergeTimeseriesForMultiLineChart(empty, empty, 'a', 'b')).toEqual([]);
+	});
+
 	it('aligns counts on union of period keys', () => {
 		const a = {
 			metric: 'users',
@@ -32,6 +37,11 @@ describe('contentMixPieData', () => {
 	it('returns four slices', () => {
 		const d = contentMixPieData({ albumsCount: 1, blogsCount: 2, reelsCount: 3, storiesCount: 4 });
 		expect(d.reduce((s, x) => s + x.value, 0)).toBe(10);
+	});
+
+	it('preserves zero-valued slices', () => {
+		const d = contentMixPieData({ albumsCount: 0, blogsCount: 0, reelsCount: 0, storiesCount: 0 });
+		expect(d.every((x) => x.value === 0)).toBe(true);
 	});
 });
 

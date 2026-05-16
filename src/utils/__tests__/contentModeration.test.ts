@@ -18,6 +18,14 @@ describe('admin content moderation helpers', () => {
 		expect(isSuperAdminFromToken(makeToken({ role: 'SUPER_ADMIN' }))).toBe(true);
 		expect(isSuperAdminFromToken(makeToken({ role: 'ADMIN' }))).toBe(false);
 		expect(isSuperAdminFromToken(makeToken({ roles: ['USER', 'SUPER_ADMIN'] }))).toBe(true);
+		expect(
+			isSuperAdminFromToken(
+				makeToken({
+					'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': 'SUPER_ADMIN',
+				})
+			)
+		).toBe(true);
+		expect(isSuperAdminFromToken(null)).toBe(false);
 		expect(isSuperAdminFromToken('not-a-jwt')).toBe(false);
 	});
 
@@ -55,6 +63,12 @@ describe('admin content moderation helpers', () => {
 			reason: 'Shared reason',
 			userMessage: undefined,
 		});
+	});
+
+	it('trims optional userMessage in bulk payload', () => {
+		const body = buildBulkModerationPayload('Approve', ['Album:1'], 'reason', '  hi  ');
+		expect(body.userMessage).toBe('hi');
+		expect(body.userMessage).not.toBe('  hi  ');
 	});
 
 	it('warns when oldest pending content exceeds operational threshold', () => {
