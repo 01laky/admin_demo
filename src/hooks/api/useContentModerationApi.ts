@@ -37,6 +37,10 @@ export interface ModerationItem {
 	removedAtUtc?: string | null;
 	removalReason?: string | null;
 	createdAt: string;
+	/** SHV2 PI-8: plain-text body/description preview from API (never render as HTML). */
+	bodyPreviewPlainText?: string;
+	/** SHV2 PI-8: optional reel media URL preview. */
+	mediaUrlPreview?: string | null;
 }
 
 export interface ModerationEvent {

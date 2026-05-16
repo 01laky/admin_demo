@@ -2,6 +2,11 @@ import { Button, Spinner } from 'react-bootstrap';
 import type { ModerationItem } from '@/hooks/api/useContentModerationApi';
 import type { useModerationEvents } from '@/hooks/api/useContentModerationApi';
 import { formatOptionalDate, parseModerationFlags } from '@/utils/contentModeration';
+import {
+	formatModerationBodyPreview,
+	formatModerationMediaPreview,
+} from '@/utils/moderationPreview';
+import { ModerationPlainTextPreview } from '@/components/moderation/ModerationPlainTextPreview';
 
 type ModerationEvents = NonNullable<ReturnType<typeof useModerationEvents>['data']>;
 
@@ -34,6 +39,16 @@ export function ModerationItemDrawer({
 					Close
 				</Button>
 			</div>
+			<ModerationPlainTextPreview
+				label="Body preview (plain text)"
+				value={formatModerationBodyPreview(item.bodyPreviewPlainText)}
+			/>
+			{formatModerationMediaPreview(item.mediaUrlPreview) && (
+				<ModerationPlainTextPreview
+					label="Media URL"
+					value={formatModerationMediaPreview(item.mediaUrlPreview)!}
+				/>
+			)}
 			<div className="content-moderation-page__detail-grid">
 				<div>
 					<h3>AI recommendation</h3>
