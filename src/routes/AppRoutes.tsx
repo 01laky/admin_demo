@@ -1,10 +1,10 @@
 import { Suspense, useCallback, useEffect, type ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LanguageRouter } from '../components/LanguageRouter';
-import { AdminLayout } from '../components/AdminLayout';
-import { ProtectedRoute } from '../components/ProtectedRoute';
-import { GuestRoute } from '../components/GuestRoute';
-import { LoginPage } from '../pages/LoginPage';
+import { LanguageRouter } from '@/components/LanguageRouter';
+import { AdminLayout } from '@/components/AdminLayout';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { GuestRoute } from '@/components/GuestRoute';
+import { LoginPage } from '@/pages/LoginPage';
 import {
 	DashboardPage,
 	HomePageProtected,
@@ -27,9 +27,9 @@ import {
 } from './lazyAdminPages';
 import { RouteLoadingFallback } from './RouteLoadingFallback';
 import { useAdminRoutePaths } from './useAdminRoutePaths';
-import { logger } from '../utils/logger';
-import { env } from '../config/env';
-import { supportedLanguages } from '../i18n/config';
+import { logger } from '@/utils/logger';
+import { env } from '@/config/env';
+import { supportedLanguages } from '@/i18n/config';
 
 export function AppRoutes() {
 	const {

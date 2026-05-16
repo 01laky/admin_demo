@@ -172,16 +172,17 @@ many_faces_admin/
 │   │   ├── services/       # API service classes
 │   │   ├── models/         # TypeScript models
 │   │   └── core/           # API core utilities
-│   ├── components/         # React components
-│   │   ├── radix/          # Custom UI components (Button, Input, FormField, Table)
-│   │   ├── __tests__/      # Component tests
-│   │   └── ...             # Other components (UsersTable, FacesTable, PagesTable, Sidebar)
-│   ├── pages/              # Page components
-│   │   ├── UsersPage.tsx   # User list page
-│   │   ├── CreateUserPage.tsx
-│   │   ├── EditUserPage.tsx
-│   │   ├── UserDetailPage.tsx
-│   │   └── ...             # Similar pages for Faces and Pages
+│   ├── components/         # React components (colocated folders — see src/components/README.md)
+│   │   ├── radix/          # Button, Input, FormField, Table (+ radix/index.ts vendor barrel)
+│   │   ├── dashboard/      # DashboardCharts, metrics, moderation widget
+│   │   ├── page-editor/    # GridLayoutEditor, ComponentPickerModal, GradientPicker
+│   │   ├── tables/         # UsersTable, FacesTable, PagesTable
+│   │   └── ...
+│   ├── pages/              # Page components (one folder per page)
+│   │   ├── UsersPage/
+│   │   ├── LoginPage/
+│   │   └── ...
+│   ├── styles/forms/       # Shared UserForm / FaceForm / PageForm SCSS
 │   ├── contexts/           # React contexts (Auth, App)
 │   ├── hooks/              # Custom React hooks
 │   │   └── api/            # API hooks (useUsersApi, useFacesApi, usePagesApi)
@@ -395,7 +396,7 @@ The admin panel provides custom hooks for API operations:
 
 4. **Test changes**:
    - Unit tests: `yarn test`
-   - Component tests: `yarn test` (tests in `src/components/__tests__/` and `src/hooks/api/__tests__/`)
+   - Component tests: `yarn test` (colocated under component folders, e.g. `UsersTable/UsersTable.test.tsx`, and `src/hooks/api/__tests__/`)
    - Manual testing: Open `http://localhost:8082`
 
 5. **View logs**: Check Docker logs or browser console
@@ -424,7 +425,7 @@ yarn test:coverage
 
 Tests are located in:
 
-- `src/components/__tests__/` - Component tests (UsersTable, PagesTable)
+- `src/components/tables/UsersTable/UsersTable.test.tsx`, etc. - Colocated table tests
 - `src/hooks/api/__tests__/` - API hook tests (useFacesApi, usePagesApi, useUsersApi)
 - `src/utils/__tests__/` - Utility function tests
 

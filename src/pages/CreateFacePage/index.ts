@@ -1,0 +1,1 @@
+export { CreateFacePage } from './CreateFacePage';

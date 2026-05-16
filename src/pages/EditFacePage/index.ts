@@ -1,0 +1,1 @@
+export { EditFacePage } from './EditFacePage';

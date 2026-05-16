@@ -47,6 +47,9 @@ export default defineConfig({
 		https: httpsServer as import('vite').ServerOptions['https'],
 	},
 	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, 'src'),
+		},
 		extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
 	},
 	define: {

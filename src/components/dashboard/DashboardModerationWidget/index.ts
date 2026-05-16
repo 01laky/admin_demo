@@ -1,0 +1,1 @@
+export { DashboardModerationWidget } from './DashboardModerationWidget';

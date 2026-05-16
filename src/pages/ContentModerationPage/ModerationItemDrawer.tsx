@@ -1,0 +1,73 @@
+import { Button, Spinner } from 'react-bootstrap';
+import type { ModerationItem } from '@/hooks/api/useContentModerationApi';
+import type { useModerationEvents } from '@/hooks/api/useContentModerationApi';
+import { formatOptionalDate, parseModerationFlags } from '@/utils/contentModeration';
+
+type ModerationEvents = NonNullable<ReturnType<typeof useModerationEvents>['data']>;
+
+interface ModerationItemDrawerProps {
+	item: ModerationItem;
+	events: ModerationEvents | undefined;
+	eventsLoading: boolean;
+	onClose: () => void;
+}
+
+export function ModerationItemDrawer({
+	item,
+	events,
+	eventsLoading,
+	onClose,
+}: ModerationItemDrawerProps) {
+	return (
+		<section className="content-moderation-page__detail" aria-label="Moderation detail">
+			<div className="content-moderation-page__detail-header">
+				<div>
+					<h2>
+						{item.contentType}: {item.title}
+					</h2>
+					<p>
+						Submitted {formatOptionalDate(item.submittedAtUtc)} by{' '}
+						{item.creatorName.trim() || item.creatorId}
+					</p>
+				</div>
+				<Button variant="outline-secondary" size="sm" onClick={onClose}>
+					Close
+				</Button>
+			</div>
+			<div className="content-moderation-page__detail-grid">
+				<div>
+					<h3>AI recommendation</h3>
+					<p>Status: {item.aiReviewStatus}</p>
+					<p>Decision: {item.aiReviewDecision}</p>
+					<p>Risk: {item.aiReviewRiskLevel}</p>
+					<p>Flags: {parseModerationFlags(item.aiReviewFlagsJson).join(', ') || 'None'}</p>
+					<p>Reason: {item.aiReviewReason || 'No AI reason yet.'}</p>
+					<p>User message: {item.aiReviewUserMessage || 'Not set'}</p>
+					<p>Model: {item.aiReviewModelVersion || 'Not set'}</p>
+					<p>Trace: {item.aiReviewTraceId || 'Not set'}</p>
+				</div>
+				<div>
+					<h3>Human moderation</h3>
+					<p>Status: {item.approvalStatus}</p>
+					<p>Reviewed: {formatOptionalDate(item.humanReviewedAtUtc)}</p>
+					<p>Decision reason: {item.humanDecisionReason || 'Not set'}</p>
+					<p>Removed: {formatOptionalDate(item.removedAtUtc)}</p>
+					<p>Removal reason: {item.removalReason || 'Not set'}</p>
+				</div>
+			</div>
+			<h3>Audit history</h3>
+			{eventsLoading && <Spinner animation="border" size="sm" />}
+			<ul className="content-moderation-page__events">
+				{(events ?? []).map((event) => (
+					<li key={event.id}>
+						<strong>{formatOptionalDate(event.createdAtUtc)}</strong> {event.actorType}:{' '}
+						{event.oldApprovalStatus || '-'} / {event.oldAiReviewStatus || '-'} to{' '}
+						{event.newApprovalStatus || '-'} / {event.newAiReviewStatus || '-'}
+						{event.reason && <span> - {event.reason}</span>}
+					</li>
+				))}
+				{!eventsLoading && (events ?? []).length === 0 && <li>No audit events yet.</li>}
+			</ul>
+		</section>
+	);
+}

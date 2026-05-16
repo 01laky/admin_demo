@@ -30,6 +30,23 @@ export default defineConfig([
 			globals: globals.browser,
 		},
 		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					patterns: [
+						{
+							group: ['**/pages/**/*.tsx', '**/components/**/*.tsx'],
+							message:
+								'Import via folder barrels without .tsx paths (colocated folders).',
+						},
+						{
+							group: ['**/pages/*/**', '!**/pages/*/index'],
+							message:
+								'Import pages via pages/<Name> barrel only, not deep page-private files.',
+						},
+					],
+				},
+			],
 			// Allow unused vars that start with underscore
 			'@typescript-eslint/no-unused-vars': [
 				'error',
