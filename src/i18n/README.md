@@ -14,12 +14,11 @@ This app uses **react-i18next** for UI copy and localized **admin routes** (`rou
 | Piece | Role |
 | ----- | ---- |
 | `config.ts` | i18next init from `GET /api/localization/admin` (async bootstrap in `main.tsx`) |
+| `fetchLocalizationBundle.ts` | Fetches bundle before render |
 | `../utils/routeTranslations.ts` | Localized path segments for React Router |
 | `../routes/useAdminRoutePaths.ts` | Builds multi-language route lists from `routes.*` |
 
-**Source of truth:** `many_faces_backend/BeDemo.Api/Localization/Admin/*.resx`.
-
-**Transitional:** `locales/{en,sk,cz}.json` until centralized static i18n is merged.
+**Source of truth:** `many_faces_backend/BeDemo.Api/Localization/Admin/*.resx` (no `locales/*.json` in this repo).
 
 ## CMS page route translations (database)
 
