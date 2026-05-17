@@ -76,6 +76,7 @@ export function ChatPage() {
 	const [input, setInput] = useState('');
 	const [connectionState, setConnectionState] = useState<ConnectionState>('Disconnected');
 	const [isSending, setIsSending] = useState(false);
+	const [sendingElapsedSec, setSendingElapsedSec] = useState(0);
 
 	const connectionRef = useRef<HubConnection | null>(null);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -152,6 +153,14 @@ export function ChatPage() {
 	useEffect(() => {
 		scrollToBottom();
 	}, [messages, scrollToBottom, isSending]);
+
+	useEffect(() => {
+		if (!isSending) return;
+		const timer = window.setInterval(() => {
+			setSendingElapsedSec((n) => n + 1);
+		}, 1000);
+		return () => clearInterval(timer);
+	}, [isSending]);
 
 	useEffect(() => {
 		if (!token) return;
@@ -301,6 +310,7 @@ export function ChatPage() {
 				{ id: optimisticUserId, role: 'user', content: text },
 			],
 		}));
+		setSendingElapsedSec(0);
 		setIsSending(true);
 		const statsMode = getAdminAiPublicStatsMode();
 		try {
