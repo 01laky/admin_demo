@@ -26,11 +26,11 @@ describe('isTokenExpired', () => {
 		expect(isTokenExpired(makeJwt({ exp: past }))).toBe(true);
 	});
 
-	it('returns false when exp matches current instant', () => {
+	it('returns true when exp matches current second (RFC 7519: not before exp)', () => {
 		vi.useFakeTimers();
 		const nowSec = 1_700_000_000;
 		vi.setSystemTime(nowSec * 1000);
-		expect(isTokenExpired(makeJwt({ exp: nowSec }))).toBe(false);
+		expect(isTokenExpired(makeJwt({ exp: nowSec }))).toBe(true);
 	});
 
 	it('returns true when exp is strictly before now', () => {

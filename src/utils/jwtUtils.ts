@@ -11,7 +11,8 @@ export function isTokenExpired(jwt: string): boolean {
 		const payload = JSON.parse(atob(parts[1]));
 		const exp = payload.exp;
 		if (!exp) return false;
-		return exp * 1000 < Date.now();
+		// RFC 7519: valid only while current time is strictly before exp (compare whole seconds).
+		return Math.floor(Date.now() / 1000) >= exp;
 	} catch {
 		return true;
 	}
