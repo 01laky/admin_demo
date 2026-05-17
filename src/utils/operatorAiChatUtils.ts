@@ -1,4 +1,4 @@
-import type { OperatorAiMessage } from '../api/services/operatorAiApi';
+import type { OperatorAiMessage, OperatorAiMessagesPage } from '../api/services/operatorAiApi';
 
 export type UiChatRole = 'user' | 'ai';
 
@@ -55,6 +55,23 @@ export function isTransientAiStatusContent(content: string): boolean {
 	);
 }
 
+/** Hub-only replies that are not persisted (errors, rate limits, model loading). */
+export function isOperatorAiEphemeralReply(content: string): boolean {
+	if (isTransientAiStatusContent(content)) return true;
+	const c = content.toLowerCase();
+	return (
+		c.includes('conversation not found') ||
+		c.includes('too many ai requests') ||
+		c.includes('exceeds maximum length') ||
+		c.includes('only available to platform operators') ||
+		c.includes('statistics-aware ai is only available') ||
+		c.includes('režim live nie je') ||
+		c.includes('ai služba nie je dostupná') ||
+		c.includes('ai služba momentálne nie je') ||
+		c.includes('ospravedlňujem sa, ai služba')
+	);
+}
+
 export function mapPageToUiMessages(items: OperatorAiMessage[]): UiChatMessage[] {
 	return items
 		.filter((m) => m.role !== 'Assistant' || !isTransientAiStatusContent(m.content))
@@ -98,6 +115,19 @@ export function appendExchangeIfNew(
 		mapOperatorMessageToUi(userMessage),
 		mapOperatorMessageToUi(assistantMessage),
 	];
+}
+
+/** Append a persisted exchange to the React Query messages page (operator inbox). */
+export function appendExchangeToMessagesPage(
+	page: OperatorAiMessagesPage,
+	userMessage: OperatorAiMessage,
+	assistantMessage: OperatorAiMessage
+): OperatorAiMessagesPage {
+	if (page.items.some((m) => m.id === userMessage.id)) return page;
+	return {
+		...page,
+		items: [...page.items, userMessage, assistantMessage],
+	};
 }
 
 export function conversationTitle(title: string | null | undefined, unnamedLabel: string): string {

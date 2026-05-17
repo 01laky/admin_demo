@@ -4,6 +4,8 @@ import {
 	conversationTitle,
 	filterTransientStatusExchanges,
 	formatOperatorAiModelLabel,
+	appendExchangeToMessagesPage,
+	isOperatorAiEphemeralReply,
 	isTransientAiStatusContent,
 	mapOperatorMessageToUi,
 	mergeMessagePages,
@@ -77,6 +79,34 @@ describe('operatorAiChatUtils', () => {
 			{ id: 3, role: 'user', content: 'test' },
 			{ id: 4, role: 'ai', content: 'Skutočná odpoveď.' },
 		]);
+	});
+
+	it('isOperatorAiEphemeralReply detects hub validation errors', () => {
+		expect(isOperatorAiEphemeralReply('Conversation not found. Start a new chat.')).toBe(true);
+		expect(isOperatorAiEphemeralReply('Ahoj, tu sú štatistiky.')).toBe(false);
+	});
+
+	it('appendExchangeToMessagesPage appends without duplicate user id', () => {
+		const user = {
+			id: 10,
+			role: 'User',
+			content: 'q',
+			statsMode: 'inline',
+			createdByUserId: 'u',
+			createdAt: '2026-01-01T00:00:00Z',
+		};
+		const assistant = {
+			id: 11,
+			role: 'Assistant',
+			content: 'a',
+			statsMode: 'inline',
+			createdByUserId: null,
+			createdAt: '2026-01-01T00:00:01Z',
+		};
+		const page = { items: [], hasMore: false, oldestId: null };
+		const next = appendExchangeToMessagesPage(page, user, assistant);
+		expect(next.items).toHaveLength(2);
+		expect(appendExchangeToMessagesPage(next, user, assistant)).toBe(next);
 	});
 
 	it('appendExchangeIfNew skips duplicate user id', () => {

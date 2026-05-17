@@ -9,6 +9,7 @@ import {
 	getOperatorAiMessages,
 	type OperatorAiConversationListItem,
 	type OperatorAiMessageAppendedEvent,
+	type OperatorAiMessagesPage,
 } from '@/api/services/operatorAiApi';
 import {
 	useCreateOperatorAiConversation,
@@ -22,12 +23,12 @@ import {
 } from '@/hooks/api/useOperatorAiApi';
 import { getAdminAiPublicStatsMode } from '@/utils/adminAiStatsSettings';
 import {
-	appendExchangeIfNew,
+	appendExchangeToMessagesPage,
 	conversationTitle,
 	mapPageToUiMessages,
 	filterTransientStatusExchanges,
 	formatOperatorAiModelLabel,
-	isTransientAiStatusContent,
+	isOperatorAiEphemeralReply,
 	mergeMessagePages,
 	parseConversationIdFromSearch,
 	type UiChatMessage,
@@ -171,17 +172,10 @@ export function ChatPage() {
 		connection.on('ReceiveAiMessage', (userMessage: string, aiResponse: string) => {
 			const cid = conversationIdRef.current;
 			if (cid == null) return;
-			if (isTransientAiStatusContent(aiResponse)) {
-				setPendingByConv((map) => ({
-					...map,
-					[cid]: [{ id: -Date.now(), role: 'user', content: userMessage }],
-				}));
-				void queryClientRef.current.invalidateQueries({
-					queryKey: operatorAiModelStatusQueryKey,
-				});
-				setIsSending(false);
-				return;
-			}
+			// Persisted turns are applied via OperatorAiMessageAppended + React Query cache.
+			// ReceiveAiMessage is only for non-persisted status/errors (model loading, rate limit, …).
+			if (!isOperatorAiEphemeralReply(aiResponse)) return;
+
 			setPendingByConv((map) => ({
 				...map,
 				[cid]: [
@@ -189,6 +183,9 @@ export function ChatPage() {
 					{ id: -Date.now() - 1, role: 'ai', content: aiResponse },
 				],
 			}));
+			void queryClientRef.current.invalidateQueries({
+				queryKey: operatorAiModelStatusQueryKey,
+			});
 			setIsSending(false);
 		});
 
@@ -196,12 +193,19 @@ export function ChatPage() {
 			refreshConversationListRef.current(evt.conversation);
 			const cid = conversationIdRef.current;
 			if (evt.conversationId !== cid || cid == null) return;
+
+			const key = messagesKey(cid);
+			queryClientRef.current.setQueryData<OperatorAiMessagesPage>(key, (old) => {
+				if (!old) return old;
+				return appendExchangeToMessagesPage(old, evt.userMessage, evt.assistantMessage);
+			});
+			void queryClientRef.current.invalidateQueries({ queryKey: key });
+
 			setPendingByConv((map) => {
-				const persisted = (map[cid] ?? []).filter((m) => m.id > 0);
-				return {
-					...map,
-					[cid]: appendExchangeIfNew(persisted, evt.userMessage, evt.assistantMessage),
-				};
+				if (!(cid in map)) return map;
+				const next = { ...map };
+				delete next[cid];
+				return next;
 			});
 			setIsSending(false);
 		});
@@ -306,7 +310,7 @@ export function ChatPage() {
 		setPendingByConv((map) => ({
 			...map,
 			[conversationId]: [
-				...(map[conversationId] ?? []).filter((m) => m.id > 0),
+				...(map[conversationId] ?? []),
 				{ id: optimisticUserId, role: 'user', content: text },
 			],
 		}));
