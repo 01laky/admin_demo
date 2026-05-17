@@ -1,4 +1,4 @@
-import { Alert, Button, Form, Spinner, Table } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Form, Row, Spinner, Table } from 'react-bootstrap';
 import type { ModerationItem } from '@/hooks/api/useContentModerationApi';
 import {
 	getModerationQueueLabel,
@@ -45,33 +45,66 @@ export function ModerationQueueTable({
 }: ModerationQueueTableProps) {
 	return (
 		<>
-			<div className="content-moderation-page__bulk" aria-label="Bulk moderation controls">
-				<strong>{selectedKeys.length} selected</strong>
-				<Form.Select
-					aria-label="Bulk action"
-					value={bulkActionName}
-					onChange={(event) => onBulkActionNameChange(event.target.value as BulkModerationAction)}
-				>
-					<option value="Approve">Approve</option>
-					<option value="Reject">Reject</option>
-					<option value="Remove">Remove</option>
-					<option value="RequeueAiReview">Requeue AI review</option>
-				</Form.Select>
-				<Form.Control
-					aria-label="Bulk reason"
-					placeholder="Shared reason for reject/remove/override"
-					value={bulkReason}
-					onChange={(event) => onBulkReasonChange(event.target.value)}
-				/>
-				<Button
-					variant="primary"
-					disabled={selectedKeys.length === 0 || bulkActionPending}
-					onClick={onRunBulkAction}
-				>
-					Apply bulk action
-				</Button>
-				{bulkResultSummary && <span>{bulkResultSummary}</span>}
-			</div>
+			<Card
+				className="content-moderation-page__bulk shadow-sm"
+				aria-label="Bulk moderation controls"
+			>
+				<Card.Body>
+					<Form
+						onSubmit={(e) => {
+							e.preventDefault();
+							onRunBulkAction();
+						}}
+					>
+						<Row className="g-3 align-items-end">
+							<Col xs={12} md="auto">
+								<p className="mb-0 fw-semibold">{selectedKeys.length} selected</p>
+							</Col>
+							<Col xs={12} sm={6} md={3} lg={2}>
+								<Form.Group controlId="moderation-bulk-action">
+									<Form.Label>Bulk action</Form.Label>
+									<Form.Select
+										value={bulkActionName}
+										onChange={(event) =>
+											onBulkActionNameChange(event.target.value as BulkModerationAction)
+										}
+									>
+										<option value="Approve">Approve</option>
+										<option value="Reject">Reject</option>
+										<option value="Remove">Remove</option>
+										<option value="RequeueAiReview">Requeue AI review</option>
+									</Form.Select>
+								</Form.Group>
+							</Col>
+							<Col xs={12} md>
+								<Form.Group controlId="moderation-bulk-reason">
+									<Form.Label>Shared reason</Form.Label>
+									<Form.Control
+										placeholder="Reason for reject, remove, or override"
+										value={bulkReason}
+										onChange={(event) => onBulkReasonChange(event.target.value)}
+									/>
+								</Form.Group>
+							</Col>
+							<Col xs={12} sm={6} md="auto">
+								<Button
+									type="submit"
+									variant="primary"
+									className="w-100"
+									disabled={selectedKeys.length === 0 || bulkActionPending}
+								>
+									Apply bulk action
+								</Button>
+							</Col>
+							{bulkResultSummary && (
+								<Col xs={12}>
+									<p className="mb-0 text-muted small">{bulkResultSummary}</p>
+								</Col>
+							)}
+						</Row>
+					</Form>
+				</Card.Body>
+			</Card>
 
 			{isLoading && <Spinner animation="border" />}
 			{error && <Alert variant="danger">Failed to load moderation queue.</Alert>}

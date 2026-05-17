@@ -136,7 +136,7 @@ export function Sidebar() {
 							exit={{ opacity: 0, x: -20 }}
 							transition={{ duration: 0.2 }}
 						>
-							Admin Demo
+							Many Faces Admin
 						</motion.div>
 					)}
 				</AnimatePresence>

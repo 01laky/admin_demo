@@ -1,4 +1,4 @@
-import { Form } from 'react-bootstrap';
+import { Card, Col, Form, Row } from 'react-bootstrap';
 import {
 	AI_REVIEW_STATUSES,
 	type AiReviewRiskLevel,
@@ -15,6 +15,10 @@ import {
 } from './moderationFiltersTypes';
 
 interface ModerationFiltersProps extends ModerationFilterState, ModerationFilterSetters {}
+
+function formatEnumLabel(value: string): string {
+	return value.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
 
 export function ModerationFilters(props: ModerationFiltersProps) {
 	const {
@@ -48,116 +52,186 @@ export function ModerationFilters(props: ModerationFiltersProps) {
 		setMinQueueAgeHoursText,
 	} = props;
 
+	const col = { xs: 12, sm: 6, xl: 3 } as const;
+
 	return (
-		<div className="content-moderation-page__header-filters">
-			<div className="content-moderation-page__filters">
-				<Form.Select
-					aria-label="Content type"
-					value={contentType}
-					onChange={(event) => setContentType(event.target.value as ModeratedContentType | '')}
-				>
-					{CONTENT_TYPES.map((value) => (
-						<option key={value || 'all'} value={value}>
-							{value || 'All content'}
-						</option>
-					))}
-				</Form.Select>
-				<Form.Select
-					aria-label="Approval status"
-					value={approvalStatus}
-					onChange={(event) => setApprovalStatus(event.target.value as ContentApprovalStatus | '')}
-				>
-					{APPROVAL_FILTERS.map((value) => (
-						<option key={value || 'all'} value={value}>
-							{value ? value.replace(/([a-z])([A-Z])/g, '$1 $2') : 'All statuses'}
-						</option>
-					))}
-				</Form.Select>
-				<Form.Select
-					aria-label="AI review status"
-					value={aiReviewStatus}
-					onChange={(event) => setAiReviewStatus(event.target.value as AiReviewStatus | '')}
-				>
-					{AI_REVIEW_STATUSES.map((value) => (
-						<option key={value || 'all'} value={value}>
-							{value ? value.replace(/([a-z])([A-Z])/g, '$1 $2') : 'All AI states'}
-						</option>
-					))}
-				</Form.Select>
-				<Form.Select
-					aria-label="AI risk level"
-					value={riskLevel}
-					onChange={(event) => setRiskLevel(event.target.value as AiReviewRiskLevel | '')}
-				>
-					{RISK_FILTERS.map((value) => (
-						<option key={value || 'all'} value={value}>
-							{value || 'All risks'}
-						</option>
-					))}
-				</Form.Select>
-				<Form.Control
-					aria-label="Author id"
-					placeholder="Author id"
-					value={authorId}
-					onChange={(event) => setAuthorId(event.target.value)}
-				/>
-			</div>
-			<div className="content-moderation-page__filters content-moderation-page__filters--secondary">
-				<Form.Control
-					aria-label="Face id"
-					placeholder="Face id"
-					value={faceIdText}
-					onChange={(event) => setFaceIdText(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Moderation version"
-					placeholder="Moderation version"
-					value={moderationVersionText}
-					onChange={(event) => setModerationVersionText(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Flag contains"
-					placeholder="Flag contains"
-					value={flagContains}
-					onChange={(event) => setFlagContains(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Min AI confidence"
-					placeholder="Min confidence (0–1)"
-					value={minConfidenceText}
-					onChange={(event) => setMinConfidenceText(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Max AI confidence"
-					placeholder="Max confidence (0–1)"
-					value={maxConfidenceText}
-					onChange={(event) => setMaxConfidenceText(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Submitted from (UTC ISO)"
-					placeholder="Submitted from (UTC ISO)"
-					value={submittedFromUtc}
-					onChange={(event) => setSubmittedFromUtc(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Submitted to (UTC ISO)"
-					placeholder="Submitted to (UTC ISO)"
-					value={submittedToUtc}
-					onChange={(event) => setSubmittedToUtc(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Reviewed by user id"
-					placeholder="Human reviewer user id"
-					value={reviewedByUserId}
-					onChange={(event) => setReviewedByUserId(event.target.value)}
-				/>
-				<Form.Control
-					aria-label="Min queue age hours"
-					placeholder="Min queue age (hours)"
-					value={minQueueAgeHoursText}
-					onChange={(event) => setMinQueueAgeHoursText(event.target.value)}
-				/>
-			</div>
-		</div>
+		<Card className="content-moderation-page__filter-card shadow-sm">
+			<Card.Body>
+				<Form onSubmit={(e) => e.preventDefault()}>
+					<Row className="g-3">
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-content-type">
+								<Form.Label>Content type</Form.Label>
+								<Form.Select
+									value={contentType}
+									onChange={(event) =>
+										setContentType(event.target.value as ModeratedContentType | '')
+									}
+								>
+									{CONTENT_TYPES.map((value) => (
+										<option key={value || 'all'} value={value}>
+											{value || 'All content'}
+										</option>
+									))}
+								</Form.Select>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-approval-status">
+								<Form.Label>Approval status</Form.Label>
+								<Form.Select
+									value={approvalStatus}
+									onChange={(event) =>
+										setApprovalStatus(event.target.value as ContentApprovalStatus | '')
+									}
+								>
+									{APPROVAL_FILTERS.map((value) => (
+										<option key={value || 'all'} value={value}>
+											{value ? formatEnumLabel(value) : 'All statuses'}
+										</option>
+									))}
+								</Form.Select>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-ai-status">
+								<Form.Label>AI review status</Form.Label>
+								<Form.Select
+									value={aiReviewStatus}
+									onChange={(event) => setAiReviewStatus(event.target.value as AiReviewStatus | '')}
+								>
+									{AI_REVIEW_STATUSES.map((value) => (
+										<option key={value || 'all'} value={value}>
+											{value ? formatEnumLabel(value) : 'All AI states'}
+										</option>
+									))}
+								</Form.Select>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-risk-level">
+								<Form.Label>AI risk level</Form.Label>
+								<Form.Select
+									value={riskLevel}
+									onChange={(event) => setRiskLevel(event.target.value as AiReviewRiskLevel | '')}
+								>
+									{RISK_FILTERS.map((value) => (
+										<option key={value || 'all'} value={value}>
+											{value || 'All risks'}
+										</option>
+									))}
+								</Form.Select>
+							</Form.Group>
+						</Col>
+
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-author-id">
+								<Form.Label>Author id</Form.Label>
+								<Form.Control
+									placeholder="e.g. 42"
+									value={authorId}
+									onChange={(event) => setAuthorId(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-face-id">
+								<Form.Label>Face id</Form.Label>
+								<Form.Control
+									placeholder="e.g. 7"
+									value={faceIdText}
+									onChange={(event) => setFaceIdText(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-moderation-version">
+								<Form.Label>Moderation version</Form.Label>
+								<Form.Control
+									placeholder="e.g. 1"
+									value={moderationVersionText}
+									onChange={(event) => setModerationVersionText(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-flag-contains">
+								<Form.Label>Flag contains</Form.Label>
+								<Form.Control
+									placeholder="Substring match"
+									value={flagContains}
+									onChange={(event) => setFlagContains(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-min-confidence">
+								<Form.Label>Min confidence</Form.Label>
+								<Form.Control
+									placeholder="0–1"
+									inputMode="decimal"
+									value={minConfidenceText}
+									onChange={(event) => setMinConfidenceText(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-max-confidence">
+								<Form.Label>Max confidence</Form.Label>
+								<Form.Control
+									placeholder="0–1"
+									inputMode="decimal"
+									value={maxConfidenceText}
+									onChange={(event) => setMaxConfidenceText(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-submitted-from">
+								<Form.Label>Submitted from (UTC)</Form.Label>
+								<Form.Control
+									placeholder="2026-01-01T00:00:00Z"
+									value={submittedFromUtc}
+									onChange={(event) => setSubmittedFromUtc(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-submitted-to">
+								<Form.Label>Submitted to (UTC)</Form.Label>
+								<Form.Control
+									placeholder="2026-12-31T23:59:59Z"
+									value={submittedToUtc}
+									onChange={(event) => setSubmittedToUtc(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-reviewer-id">
+								<Form.Label>Human reviewer id</Form.Label>
+								<Form.Control
+									placeholder="User id"
+									value={reviewedByUserId}
+									onChange={(event) => setReviewedByUserId(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+						<Col {...col}>
+							<Form.Group controlId="moderation-filter-queue-age">
+								<Form.Label>Min queue age (hours)</Form.Label>
+								<Form.Control
+									placeholder="e.g. 24"
+									inputMode="numeric"
+									value={minQueueAgeHoursText}
+									onChange={(event) => setMinQueueAgeHoursText(event.target.value)}
+								/>
+							</Form.Group>
+						</Col>
+					</Row>
+				</Form>
+			</Card.Body>
+		</Card>
 	);
 }

@@ -105,20 +105,24 @@ export function DashboardPage() {
 					</Alert>
 				)}
 
-				<Row className="g-4 mb-4">
+				<Row className="g-3 mb-4 dashboard-page__stat-row">
 					{primaryCards.map((stat) => (
-						<Col xs={12} sm={6} lg={4} xl={2} key={stat.label}>
+						<Col xs={12} sm={6} lg={4} xl={2} key={stat.label} className="d-flex">
 							<Link to={getLocalizedPath(stat.link)} className="dashboard-card-link">
 								<div
 									className="dashboard-card"
 									style={{ '--accent-color': stat.color } as React.CSSProperties}
 								>
-									<div className="dashboard-card__icon">{stat.icon}</div>
-									<div className="dashboard-card__info">
-										<div className="dashboard-card__label">{stat.label}</div>
-										<div className="dashboard-card__value">{stat.value}</div>
+									<div className="dashboard-card__top">
+										<div className="dashboard-card__icon" aria-hidden>
+											{stat.icon}
+										</div>
+										<span className="dashboard-card__arrow" aria-hidden>
+											→
+										</span>
 									</div>
-									<div className="dashboard-card__arrow">→</div>
+									<div className="dashboard-card__label">{stat.label}</div>
+									<div className="dashboard-card__value">{stat.value}</div>
 								</div>
 							</Link>
 						</Col>

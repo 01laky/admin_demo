@@ -111,7 +111,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 							<span />
 						</span>
 					</button>
-					<span className="admin-header__title">Admin Demo</span>
+					<span className="admin-header__title">Many Faces Admin</span>
 				</div>
 
 				<div className="admin-header__right">
@@ -158,7 +158,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 				className={`admin-sidebar ${sidebarOpen ? 'admin-sidebar--open' : 'admin-sidebar--closed'} ${isMobile ? 'admin-sidebar--mobile' : 'admin-sidebar--desktop'}`}
 			>
 				<div className="admin-sidebar__header">
-					<span className="admin-sidebar__logo">Admin Demo</span>
+					<span className="admin-sidebar__logo">Many Faces Admin</span>
 					{isMobile && (
 						<button
 							className="admin-sidebar__close"
