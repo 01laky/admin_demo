@@ -341,139 +341,152 @@ export function ChatPage() {
 	const unnamed = t('pages.chat.unnamedThread');
 
 	return (
-		<div className="chat-page">
-			<aside className="chat-page__sidebar">
-				<div className="chat-page__sidebar-header">
-					<h1 className="chat-page__title">{t('pages.chat.title')}</h1>
-					<Button
-						type="button"
-						size="sm"
-						onClick={() => void handleNewChat()}
-						disabled={createConversation.isPending}
-					>
-						{t('pages.chat.newChat')}
-					</Button>
-				</div>
-				<div className="chat-page__thread-list">
-					{listLoading && <p className="chat-page__sidebar-hint">{t('pages.chat.loadingOlder')}</p>}
-					{!listLoading && conversations.length === 0 && (
-						<p className="chat-page__sidebar-hint">{t('pages.chat.sidebarEmpty')}</p>
-					)}
-					{conversations.map((c) => (
-						<button
-							key={c.id}
+		<div className="chat-page-shell">
+			<div className="chat-page">
+				<aside className="chat-page__sidebar">
+					<div className="chat-page__sidebar-header">
+						<h1 className="chat-page__title">{t('pages.chat.title')}</h1>
+						<Button
 							type="button"
-							className={`chat-page__thread${c.id === conversationId ? ' chat-page__thread--active' : ''}`}
-							onClick={() => setActiveConversationId(c.id)}
+							size="sm"
+							onClick={() => void handleNewChat()}
+							disabled={createConversation.isPending}
 						>
-							<span className="chat-page__thread-title">{conversationTitle(c.title, unnamed)}</span>
-							<span className="chat-page__thread-meta">
-								{new Date(c.updatedAt).toLocaleString()}
-							</span>
-						</button>
-					))}
-				</div>
-			</aside>
-
-			<main className="chat-page__main">
-				<div className="chat-page__header">
-					<span
-						className={`chat-page__status chat-page__status--${connectionState.toLowerCase()}`}
-						title={connectionState}
-					>
-						{statusLabel}
-					</span>
-					{conversationId != null && (
-						<Button type="button" size="sm" onClick={() => void handleDelete()}>
-							{t('pages.chat.deleteChat')}
+							{t('pages.chat.newChat')}
 						</Button>
-					)}
-				</div>
-
-				{conversationId == null ? (
-					<p className="chat-page__empty-main">{t('pages.chat.selectOrNew')}</p>
-				) : (
-					<>
-						{(modelLoading || modelUnavailable) && (
-							<div
-								className={`chat-page__model-banner${
-									modelUnavailable ? ' chat-page__model-banner--error' : ''
-								}`}
-								role="status"
-							>
-								{modelUnavailable ? t('pages.chat.modelUnavailable') : t('pages.chat.modelLoading')}
-							</div>
+					</div>
+					<div className="chat-page__thread-list">
+						{listLoading && (
+							<p className="chat-page__sidebar-hint">{t('pages.chat.loadingOlder')}</p>
 						)}
-						<div
-							ref={messagesContainerRef}
-							className="chat-page__messages"
-							onScroll={handleMessagesScroll}
-						>
-							{hasMore && (
-								<button
-									type="button"
-									className="chat-page__load-older"
-									onClick={() => void handleLoadOlder()}
-									disabled={loadingOlder || messagesLoading}
-								>
-									{loadingOlder ? t('pages.chat.loadingOlder') : t('pages.chat.loadOlder')}
-								</button>
-							)}
-							{messages.length === 0 && (messagesLoading || messagesFetching) && !isSending && (
-								<p className="chat-page__empty">{t('pages.chat.loadingMessages')}</p>
-							)}
-							{messages.length === 0 &&
-								!messagesLoading &&
-								!messagesFetching &&
-								!isSending &&
-								connectionState === 'Connected' && (
-									<p className="chat-page__empty">{t('pages.chat.emptyThread')}</p>
-								)}
-							{messages.map((msg) => (
-								<div key={msg.id} className={`chat-page__message chat-page__message--${msg.role}`}>
-									<span className="chat-page__message-label">
-										{msg.role === 'user' ? t('pages.chat.you') : t('pages.chat.ai')}
-									</span>
-									<div className="chat-page__message-content">{msg.content}</div>
-								</div>
-							))}
-							{isSending && (
-								<div className="chat-page__message chat-page__message--ai">
-									<span className="chat-page__message-label">{t('pages.chat.ai')}</span>
-									<div className="chat-page__message-content chat-page__typing">
-										{t('pages.chat.waitingForAi')}
-									</div>
-								</div>
-							)}
-							<div ref={messagesEndRef} />
-						</div>
-
-						<div className="chat-page__input-row">
-							<input
-								type="text"
-								className="chat-page__input"
-								placeholder={
-									modelReady ? t('pages.chat.placeholder') : t('pages.chat.modelLoadingPlaceholder')
-								}
-								value={input}
-								onChange={(e) => setInput(e.target.value)}
-								onKeyDown={handleKeyDown}
-								disabled={connectionState !== 'Connected' || isSending || !modelReady}
-							/>
-							<Button
+						{!listLoading && conversations.length === 0 && (
+							<p className="chat-page__sidebar-hint">{t('pages.chat.sidebarEmpty')}</p>
+						)}
+						{conversations.map((c) => (
+							<button
+								key={c.id}
 								type="button"
-								onClick={() => void handleSend()}
-								disabled={
-									!input.trim() || connectionState !== 'Connected' || isSending || !modelReady
-								}
-								className="chat-page__send"
+								className={`chat-page__thread${c.id === conversationId ? ' chat-page__thread--active' : ''}`}
+								onClick={() => setActiveConversationId(c.id)}
 							>
-								{t('pages.chat.send')}
+								<span className="chat-page__thread-title">
+									{conversationTitle(c.title, unnamed)}
+								</span>
+								<span className="chat-page__thread-meta">
+									{new Date(c.updatedAt).toLocaleString()}
+								</span>
+							</button>
+						))}
+					</div>
+				</aside>
+
+				<main className="chat-page__main">
+					<div className="chat-page__header">
+						<span
+							className={`chat-page__status chat-page__status--${connectionState.toLowerCase()}`}
+							title={connectionState}
+						>
+							{statusLabel}
+						</span>
+						{conversationId != null && (
+							<Button type="button" size="sm" onClick={() => void handleDelete()}>
+								{t('pages.chat.deleteChat')}
 							</Button>
+						)}
+					</div>
+
+					{conversationId == null ? (
+						<p className="chat-page__empty-main">{t('pages.chat.selectOrNew')}</p>
+					) : (
+						<div className="chat-page__conversation">
+							{(modelLoading || modelUnavailable) && (
+								<div
+									className={`chat-page__model-banner${
+										modelUnavailable ? ' chat-page__model-banner--error' : ''
+									}`}
+									role="status"
+								>
+									{modelUnavailable
+										? t('pages.chat.modelUnavailable')
+										: t('pages.chat.modelLoading')}
+								</div>
+							)}
+							<div
+								ref={messagesContainerRef}
+								className="chat-page__messages"
+								onScroll={handleMessagesScroll}
+							>
+								{hasMore && (
+									<button
+										type="button"
+										className="chat-page__load-older"
+										onClick={() => void handleLoadOlder()}
+										disabled={loadingOlder || messagesLoading}
+									>
+										{loadingOlder ? t('pages.chat.loadingOlder') : t('pages.chat.loadOlder')}
+									</button>
+								)}
+								{messages.length === 0 && (messagesLoading || messagesFetching) && !isSending && (
+									<p className="chat-page__empty">{t('pages.chat.loadingMessages')}</p>
+								)}
+								{messages.length === 0 &&
+									!messagesLoading &&
+									!messagesFetching &&
+									!isSending &&
+									connectionState === 'Connected' && (
+										<p className="chat-page__empty">{t('pages.chat.emptyThread')}</p>
+									)}
+								{messages.map((msg) => (
+									<div
+										key={msg.id}
+										className={`chat-page__message chat-page__message--${msg.role}`}
+									>
+										<span className="chat-page__message-label">
+											{msg.role === 'user' ? t('pages.chat.you') : t('pages.chat.ai')}
+										</span>
+										<div className="chat-page__message-content">{msg.content}</div>
+									</div>
+								))}
+								{isSending && (
+									<div className="chat-page__message chat-page__message--ai">
+										<span className="chat-page__message-label">{t('pages.chat.ai')}</span>
+										<div className="chat-page__message-content chat-page__typing">
+											{t('pages.chat.waitingForAi')}
+										</div>
+									</div>
+								)}
+								<div ref={messagesEndRef} />
+							</div>
+
+							<div className="chat-page__input-row">
+								<input
+									type="text"
+									className="chat-page__input"
+									placeholder={
+										modelReady
+											? t('pages.chat.placeholder')
+											: t('pages.chat.modelLoadingPlaceholder')
+									}
+									value={input}
+									onChange={(e) => setInput(e.target.value)}
+									onKeyDown={handleKeyDown}
+									disabled={connectionState !== 'Connected' || isSending || !modelReady}
+								/>
+								<Button
+									type="button"
+									onClick={() => void handleSend()}
+									disabled={
+										!input.trim() || connectionState !== 'Connected' || isSending || !modelReady
+									}
+									className="chat-page__send"
+								>
+									{t('pages.chat.send')}
+								</Button>
+							</div>
 						</div>
-					</>
-				)}
-			</main>
+					)}
+				</main>
+			</div>
 		</div>
 	);
 }

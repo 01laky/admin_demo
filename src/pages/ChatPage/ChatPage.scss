@@ -1,22 +1,38 @@
 // Chat Page — two-pane operator AI inbox
 
+$admin-header-height: 60px;
+$chat-page-vertical-padding: 2rem;
+
+.chat-page-shell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-height: calc(100vh - #{$admin-header-height});
+	padding: 1rem;
+}
+
 .chat-page {
 	display: flex;
 	gap: 1rem;
-	min-height: calc(100vh - 80px);
+	box-sizing: border-box;
+	width: 100%;
 	max-width: 1200px;
-	margin: 0 auto;
-	padding: 1rem;
+	height: min(720px, calc(100vh - #{$admin-header-height} - #{$chat-page-vertical-padding}));
+	max-height: calc(100vh - #{$admin-header-height} - #{$chat-page-vertical-padding});
+	min-height: 0;
+	overflow: hidden;
 }
 
 .chat-page__sidebar {
 	flex: 0 0 280px;
 	display: flex;
 	flex-direction: column;
+	height: 100%;
+	min-height: 0;
 	border: 1px solid #dee2e6;
 	border-radius: 8px;
 	background: #fff;
-	min-height: 400px;
 }
 
 .chat-page__sidebar-header {
@@ -89,6 +105,21 @@
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
+	min-height: 0;
+	height: 100%;
+	border: 1px solid #dee2e6;
+	border-radius: 8px;
+	background: #fff;
+	padding: 0.75rem 1rem 1rem;
+	box-sizing: border-box;
+}
+
+.chat-page__conversation {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
 }
 
 .chat-page__header {
@@ -147,13 +178,13 @@
 }
 
 .chat-page__messages {
-	flex: 1;
+	flex: 1 1 auto;
+	min-height: 0;
 	overflow-y: auto;
 	border: 1px solid #dee2e6;
 	border-radius: 8px;
 	padding: 1rem;
 	margin-bottom: 1rem;
-	min-height: 200px;
 	background: #f8f9fa;
 }
 
