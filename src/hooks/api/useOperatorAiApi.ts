@@ -45,7 +45,7 @@ export function useOperatorAiModelStatus() {
 		refetchOnMount: 'always',
 		refetchInterval: (query) => {
 			const data = query.state.data;
-			if (data?.ready) return false;
+			if (data?.ready) return 20_000;
 			if (data?.unavailable) return 10_000;
 			return 3_000;
 		},

@@ -26,6 +26,7 @@ import {
 	conversationTitle,
 	mapPageToUiMessages,
 	filterTransientStatusExchanges,
+	formatOperatorAiModelLabel,
 	isTransientAiStatusContent,
 	mergeMessagePages,
 	parseConversationIdFromSearch,
@@ -338,6 +339,23 @@ export function ChatPage() {
 					? t('pages.chat.connecting')
 					: t('pages.chat.disconnected');
 
+	const modelShortName = formatOperatorAiModelLabel(modelStatus?.modelName);
+	const modelStatusKind = modelUnavailable
+		? 'unavailable'
+		: modelLoading
+			? 'loading'
+			: modelReady
+				? 'ready'
+				: 'unknown';
+	const modelStatusLabel =
+		modelStatusKind === 'ready'
+			? t('pages.chat.modelStatusReady', { model: modelShortName || 'AI' })
+			: modelStatusKind === 'loading'
+				? t('pages.chat.modelStatusLoading')
+				: modelStatusKind === 'unavailable'
+					? t('pages.chat.modelStatusUnavailable')
+					: t('pages.chat.modelStatusUnknown');
+
 	const unnamed = t('pages.chat.unnamedThread');
 
 	return (
@@ -382,12 +400,20 @@ export function ChatPage() {
 
 				<main className="chat-page__main">
 					<div className="chat-page__header">
-						<span
-							className={`chat-page__status chat-page__status--${connectionState.toLowerCase()}`}
-							title={connectionState}
-						>
-							{statusLabel}
-						</span>
+						<div className="chat-page__header-statuses">
+							<span
+								className={`chat-page__status chat-page__status--${connectionState.toLowerCase()}`}
+								title={connectionState}
+							>
+								{statusLabel}
+							</span>
+							<span
+								className={`chat-page__model-status chat-page__model-status--${modelStatusKind}`}
+								title={modelStatus?.modelName ?? undefined}
+							>
+								{modelStatusLabel}
+							</span>
+						</div>
 						{conversationId != null && (
 							<Button type="button" size="sm" onClick={() => void handleDelete()}>
 								{t('pages.chat.deleteChat')}
@@ -451,7 +477,14 @@ export function ChatPage() {
 									<div className="chat-page__message chat-page__message--ai">
 										<span className="chat-page__message-label">{t('pages.chat.ai')}</span>
 										<div className="chat-page__message-content chat-page__typing">
-											{t('pages.chat.waitingForAi')}
+											<p className="chat-page__typing-line">{t('pages.chat.waitingForAi')}</p>
+											{sendingElapsedSec > 0 && (
+												<p className="chat-page__typing-hint">
+													{t('pages.chat.waitingForAiElapsed', {
+														seconds: sendingElapsedSec,
+													})}
+												</p>
+											)}
 										</div>
 									</div>
 								)}

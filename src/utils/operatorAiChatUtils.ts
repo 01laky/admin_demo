@@ -8,6 +8,15 @@ export interface UiChatMessage {
 	content: string;
 }
 
+/** Short label for admin UI (e.g. Qwen/Qwen3-4B-Instruct-2507 → Qwen3-4B). */
+export function formatOperatorAiModelLabel(modelName: string | null | undefined): string {
+	if (!modelName?.trim()) return '';
+	const base = modelName.includes('/')
+		? modelName.slice(modelName.lastIndexOf('/') + 1)
+		: modelName;
+	return base.replace(/-Instruct.*$/i, '').replace(/-2507$/i, '') || base;
+}
+
 export function parseConversationIdFromSearch(search: string): number | null {
 	const params = new URLSearchParams(search.startsWith('?') ? search : `?${search}`);
 	const raw = params.get('c');
@@ -29,12 +38,20 @@ export function mapOperatorMessageToUi(m: OperatorAiMessage): UiChatMessage {
 	};
 }
 
-/** Legacy/status lines saved before hub stopped persisting placeholders. */
+/** Legacy/status or infrastructure errors that must not appear as normal assistant chat. */
 export function isTransientAiStatusContent(content: string): boolean {
 	const c = content.toLowerCase();
-	return (
+	if (
 		(c.includes('načítava') || c.includes('nacitava')) &&
 		(c.includes('pamäte') || c.includes('pamate') || c.includes('model'))
+	) {
+		return true;
+	}
+	return (
+		c.includes('urlopen error') ||
+		c.includes('connection refused') ||
+		c.startsWith('error:') ||
+		c.includes('ai service unavailable')
 	);
 }
 

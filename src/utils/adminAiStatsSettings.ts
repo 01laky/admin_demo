@@ -11,7 +11,7 @@ export function getAdminAiPublicStatsMode(): AdminAiPublicStatsMode {
 	} catch {
 		/* ignore */
 	}
-	return 'off';
+	return 'inline';
 }
 
 export function setAdminAiPublicStatsMode(mode: AdminAiPublicStatsMode): void {

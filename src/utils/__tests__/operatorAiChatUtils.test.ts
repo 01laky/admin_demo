@@ -3,6 +3,7 @@ import {
 	appendExchangeIfNew,
 	conversationTitle,
 	filterTransientStatusExchanges,
+	formatOperatorAiModelLabel,
 	isTransientAiStatusContent,
 	mapOperatorMessageToUi,
 	mergeMessagePages,
@@ -10,6 +11,11 @@ import {
 } from '../operatorAiChatUtils';
 
 describe('operatorAiChatUtils', () => {
+	it('formatOperatorAiModelLabel shortens Hugging Face ids', () => {
+		expect(formatOperatorAiModelLabel('Qwen/Qwen3-4B-Instruct-2507')).toBe('Qwen3-4B');
+		expect(formatOperatorAiModelLabel('')).toBe('');
+	});
+
 	it('parseConversationIdFromSearch reads ?c=', () => {
 		expect(parseConversationIdFromSearch('?c=42')).toBe(42);
 		expect(parseConversationIdFromSearch('')).toBeNull();
@@ -50,6 +56,10 @@ describe('operatorAiChatUtils', () => {
 			)
 		).toBe(true);
 		expect(isTransientAiStatusContent('Ahoj, som pripravený.')).toBe(false);
+	});
+
+	it('isTransientAiStatusContent hides legacy infrastructure errors', () => {
+		expect(isTransientAiStatusContent('<urlopen error [Errno 111] Connection refused>')).toBe(true);
 	});
 
 	it('filterTransientStatusExchanges removes user+placeholder pairs', () => {
