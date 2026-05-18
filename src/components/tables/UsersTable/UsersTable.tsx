@@ -9,7 +9,6 @@ import {
 	type ColumnFiltersState,
 	flexRender,
 } from '@tanstack/react-table';
-import { useTranslation } from 'react-i18next';
 import { useUsers, type User } from '@/hooks/api/useUsersApi';
 import {
 	Table,
@@ -25,7 +24,6 @@ import { useLocalizedLink } from '@/hooks/useLocalizedLink';
 import './UsersTable.scss';
 
 export function UsersTable() {
-	const { t } = useTranslation('common');
 	const navigate = useNavigate();
 	const getLocalizedPath = useLocalizedLink();
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -87,26 +85,8 @@ export function UsersTable() {
 					return new Date(date).toLocaleDateString();
 				},
 			},
-			{
-				id: 'actions',
-				header: t('common.actions'),
-				enableSorting: false,
-				cell: (info) => {
-					const userId = info.row.original.id;
-					return (
-						<div className="table-actions">
-							<Button
-								variant="outline"
-								onClick={() => navigate(getLocalizedPath(`/users/${userId}/edit`))}
-							>
-								{t('common.edit')}
-							</Button>
-						</div>
-					);
-				},
-			},
 		],
-		[t, navigate, getLocalizedPath]
+		[navigate, getLocalizedPath]
 	);
 
 	// Get users data - handle empty state gracefully

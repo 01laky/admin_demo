@@ -11,7 +11,6 @@ import {
 	UsersPage,
 	UserDetailPage,
 	CreateUserPage,
-	EditUserPage,
 	FacesPage,
 	FaceDetailPage,
 	FaceWallTicketsPage,
@@ -26,6 +25,7 @@ import {
 	RegistrationInvitesPage,
 } from './lazyAdminPages';
 import { RouteLoadingFallback } from './RouteLoadingFallback';
+import { UserEditRedirect } from './UserEditRedirect';
 import { useAdminRoutePaths } from './useAdminRoutePaths';
 import { logger } from '@/utils/logger';
 import { env } from '@/config/env';
@@ -143,9 +143,7 @@ export function AppRoutes() {
 						<Route
 							key={`${path}/:id/edit`}
 							path={`${path}/:id/edit`}
-							element={
-								<ProtectedRoute redirectTo="login">{withLayout(<EditUserPage />)}</ProtectedRoute>
-							}
+							element={<UserEditRedirect />}
 						/>
 					))}
 
