@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { __request } from '../../api/core/request';
-import { OpenAPI } from '../../api/core/OpenAPI';
+import { FacesService } from '../../api/services/FacesService';
 import {
 	fetchOperatorUserDetail,
 	postOperatorGlobalBan,
+	deleteOperatorGlobalBan,
+	postOperatorFaceBan,
+	deleteOperatorFaceBan,
 	patchOperatorFaceRole,
 	postOperatorPlatformMessage,
 } from '../../api/operatorUsersApiClient';
@@ -52,13 +54,7 @@ export function useOperatorUserDetail(userId: string) {
 export function useFaceRoles() {
 	return useQuery({
 		queryKey: ['face-roles'],
-		queryFn: async () => {
-			const response = await __request(OpenAPI, {
-				method: 'GET',
-				url: '/api/faces/face-roles',
-			});
-			return response as FaceRoleOption[];
-		},
+		queryFn: async () => (await FacesService.getApiFacesFaceRoles()) as FaceRoleOption[],
 		staleTime: 10 * 60 * 1000,
 	});
 }
@@ -75,33 +71,18 @@ export function useOperatorUserMutations(userId: string) {
 	});
 
 	const globalUnban = useMutation({
-		mutationFn: () =>
-			__request(OpenAPI, {
-				method: 'DELETE',
-				url: '/api/operator-users/users/{id}/global-ban',
-				path: { id: userId },
-			}),
+		mutationFn: () => deleteOperatorGlobalBan(userId),
 		onSuccess: invalidate,
 	});
 
 	const faceBan = useMutation({
 		mutationFn: ({ faceId, reason }: { faceId: number; reason: string }) =>
-			__request(OpenAPI, {
-				method: 'POST',
-				url: '/api/operator-users/users/{id}/faces/{faceId}/ban',
-				path: { id: userId, faceId },
-				body: { reason },
-			}),
+			postOperatorFaceBan(userId, faceId, reason),
 		onSuccess: invalidate,
 	});
 
 	const faceUnban = useMutation({
-		mutationFn: (faceId: number) =>
-			__request(OpenAPI, {
-				method: 'DELETE',
-				url: '/api/operator-users/users/{id}/faces/{faceId}/ban',
-				path: { id: userId, faceId },
-			}),
+		mutationFn: (faceId: number) => deleteOperatorFaceBan(userId, faceId),
 		onSuccess: invalidate,
 	});
 

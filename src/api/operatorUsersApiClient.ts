@@ -1,4 +1,4 @@
-import { __request } from './core/request';
+import { request as __request } from './core/request';
 import { OpenAPI } from './core/OpenAPI';
 import { buildSetFaceRoleBody } from '@/utils/operatorModerationUtils';
 
@@ -16,6 +16,31 @@ export async function postOperatorGlobalBan(userId: string, reason: string) {
 		url: '/api/operator-users/users/{id}/global-ban',
 		path: { id: userId },
 		body: { reason },
+	});
+}
+
+export async function deleteOperatorGlobalBan(userId: string) {
+	return __request(OpenAPI, {
+		method: 'DELETE',
+		url: '/api/operator-users/users/{id}/global-ban',
+		path: { id: userId },
+	});
+}
+
+export async function postOperatorFaceBan(userId: string, faceId: number, reason: string) {
+	return __request(OpenAPI, {
+		method: 'POST',
+		url: '/api/operator-users/users/{id}/faces/{faceId}/ban',
+		path: { id: userId, faceId },
+		body: { reason },
+	});
+}
+
+export async function deleteOperatorFaceBan(userId: string, faceId: number) {
+	return __request(OpenAPI, {
+		method: 'DELETE',
+		url: '/api/operator-users/users/{id}/faces/{faceId}/ban',
+		path: { id: userId, faceId },
 	});
 }
 

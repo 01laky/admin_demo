@@ -7,7 +7,7 @@ import {
 
 const mockRequest = vi.fn();
 vi.mock('../core/request', () => ({
-	__request: (...args: unknown[]) => mockRequest(...args),
+	request: (...args: unknown[]) => mockRequest(...args),
 }));
 vi.mock('../core/OpenAPI', () => ({ OpenAPI: {} }));
 
