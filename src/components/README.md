@@ -4,15 +4,15 @@ Each UI block lives in its own folder next to its styles and barrel export.
 
 ## Convention
 
-| Area | Path pattern |
-| ---- | ------------ |
-| Shell components | `src/components/<Name>/<Name>.tsx` + optional SCSS + `index.ts` |
-| Admin tables | `src/components/tables/<Name>/…` |
-| Dashboard widgets | `src/components/dashboard/<Name>/…` |
-| Page editor | `src/components/page-editor/<Name>/…` |
-| Radix wrappers | `src/components/radix/<Name>/…` (+ `radix/index.ts` vendor re-exports) |
-| Pages | `src/pages/<Name>/<Name>.tsx` + optional SCSS + `index.ts` |
-| Shared form SCSS | `src/styles/forms/*.scss` |
+| Area              | Path pattern                                                           |
+| ----------------- | ---------------------------------------------------------------------- |
+| Shell components  | `src/components/<Name>/<Name>.tsx` + optional SCSS + `index.ts`        |
+| Admin tables      | `src/components/tables/<Name>/…`                                       |
+| Dashboard widgets | `src/components/dashboard/<Name>/…`                                    |
+| Page editor       | `src/components/page-editor/<Name>/…`                                  |
+| Radix wrappers    | `src/components/radix/<Name>/…` (+ `radix/index.ts` vendor re-exports) |
+| Pages             | `src/pages/<Name>/<Name>.tsx` + optional SCSS + `index.ts`             |
+| Shared form SCSS  | `src/styles/forms/*.scss`                                              |
 
 ## New component
 
