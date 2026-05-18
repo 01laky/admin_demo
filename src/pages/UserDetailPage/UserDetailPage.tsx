@@ -8,6 +8,9 @@ import {
 	useFaceRoles,
 	useOperatorUserMutations,
 } from '@/hooks/api/useOperatorUsersApi';
+import { useOperatorUserChatThreadExists } from '@/hooks/api/useOperatorUserChatApi';
+import { isSuperAdminFromToken } from '@/utils/contentModeration';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/radix/Button';
 import { useLocalizedLink } from '@/hooks/useLocalizedLink';
 import { useConfirmModal } from '@/hooks/useConfirmModal';
@@ -31,14 +34,18 @@ export function UserDetailPage() {
 	const getLocalizedPath = useLocalizedLink();
 	const { confirm, ConfirmModalHost } = useConfirmModal();
 
+	const { token } = useAuth();
 	const { data: user, isLoading, error } = useOperatorUserDetail(userId);
 	const { data: faceRoles = [] } = useFaceRoles();
-	const { globalBan, globalUnban, faceBan, faceUnban, setFaceRole, sendMessage } =
+	const { globalBan, globalUnban, faceBan, faceUnban, setFaceRole } =
 		useOperatorUserMutations(userId);
+	const { data: threadExists } = useOperatorUserChatThreadExists(
+		userId,
+		Boolean(userId) && isSuperAdminFromToken(token)
+	);
 
 	const [globalBanReason, setGlobalBanReason] = useState('');
 	const [faceBanReasonById, setFaceBanReasonById] = useState<Record<number, string>>({});
-	const [platformMessage, setPlatformMessage] = useState('');
 
 	const handleGlobalBan = async () => {
 		if (!canSubmitGlobalBan(globalBanReason)) {
@@ -123,18 +130,6 @@ export function UserDetailPage() {
 		try {
 			await setFaceRole.mutateAsync({ faceId, userRoleId });
 			toast.success(t('pages.userDetail.successRole'));
-		} catch (e) {
-			toast.error(mutationErrorMessage(e));
-		}
-	};
-
-	const handleSendMessage = async () => {
-		const content = platformMessage.trim();
-		if (!content) return;
-		try {
-			await sendMessage.mutateAsync(content);
-			setPlatformMessage('');
-			toast.success(t('pages.userDetail.successMessage'));
 		} catch (e) {
 			toast.error(mutationErrorMessage(e));
 		}
@@ -382,25 +377,23 @@ export function UserDetailPage() {
 						</div>
 					</div>
 
-					<div className="user-detail-card">
-						<h2 className="user-detail-section-title">
-							{t('pages.userDetail.platformMessageTitle')}
-						</h2>
-						<p className="user-detail-hint">{t('pages.userDetail.platformMessageHint')}</p>
-						<textarea
-							className="user-detail-textarea"
-							value={platformMessage}
-							onChange={(e) => setPlatformMessage(e.target.value)}
-							placeholder={t('pages.userDetail.platformMessagePlaceholder')}
-							rows={4}
-						/>
-						<Button
-							onClick={handleSendMessage}
-							disabled={sendMessage.isPending || !platformMessage.trim()}
-						>
-							{t('pages.userDetail.sendMessage')}
-						</Button>
-					</div>
+					{isSuperAdminFromToken(token) && (
+						<div className="user-detail-card">
+							<h2 className="user-detail-section-title">
+								{t('pages.userDetail.platformMessageTitle')}
+							</h2>
+							<p className="user-detail-hint">{t('pages.userDetail.platformMessageHint')}</p>
+							<Button
+								onClick={() =>
+									navigate(getLocalizedPath(`/user-chat?u=${encodeURIComponent(userId)}`))
+								}
+							>
+								{threadExists?.hasThread
+									? t('pages.userDetail.openChat')
+									: t('pages.userDetail.startChat')}
+							</Button>
+						</div>
+					)}
 				</div>
 			</Container>
 		</div>

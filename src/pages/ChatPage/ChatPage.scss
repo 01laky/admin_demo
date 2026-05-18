@@ -314,11 +314,12 @@ $chat-page-inset: 0.75rem;
 }
 
 .chat-page__input {
-	flex: 1;
+	box-sizing: border-box;
 	padding: 0.5rem 0.75rem;
 	border: 1px solid #ced4da;
 	border-radius: 6px;
-	font-size: 1rem;
+	font-size: 0.9375rem;
+	line-height: 1.25;
 
 	&:focus {
 		outline: none;
@@ -330,6 +331,17 @@ $chat-page-inset: 0.75rem;
 		background: #e9ecef;
 		cursor: not-allowed;
 	}
+}
+
+.chat-page__input-row .chat-page__input {
+	flex: 1;
+}
+
+.chat-page__sidebar-search {
+	flex: 0 0 auto;
+	width: calc(100% - 1rem);
+	margin: 0.5rem;
+	min-height: 2.25rem;
 }
 
 .chat-page__send {

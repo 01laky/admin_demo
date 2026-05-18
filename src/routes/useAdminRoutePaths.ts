@@ -10,6 +10,7 @@ const ROUTE_IDS = [
 	'faces',
 	'moderation',
 	'chat',
+	'userChat',
 	'settings',
 	'registrationInvites',
 ] as const;

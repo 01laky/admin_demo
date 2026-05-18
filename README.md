@@ -21,6 +21,7 @@ From an engineering perspective, this submodule demonstrates a modern React admi
 - Component picking for albums, ads, blogs, chat rooms, profiles, reels, stories, and their grid/carousel variants.
 - Preservation of component metadata such as title, icon, and bound content ids while layouts are edited.
 - Superadmin-only **content moderation** for user-created albums, blogs, and reels: extended **filters**, **metrics** with **alerts**, **bulk** approve/reject/remove/requeue, per-item audit, and detail drawer — see [`docs/guides/ai-assisted-content-approval.md`](../docs/guides/ai-assisted-content-approval.md).
+- **Super-admin user chat** (`/user-chat`): two-pane real-time DMs with end users via `MessengerHub` + `SendPlatformDirectMessage`; entry from user detail **Open chat** — see [`docs/guides/admin-superadmin-user-chat.md`](../docs/guides/admin-superadmin-user-chat.md).
 - **Operator dashboard** with platform-wide **statistics**, **charts** (`GET /api/Stats`, `GET /api/Stats/timeseries`), a **full metrics table**, an **“AI & public aggregates”** strip (current **off / inline / live** mode + optional preview of **`GET /api/Stats/public`**), **Settings** for AI statistics, and **AI Chat** that calls **`SendToAiWithOperatorStats`** — see [`docs/guides/admin-dashboard-metrics.md`](../docs/guides/admin-dashboard-metrics.md).
 - OAuth2/JWT-backed protected admin routes.
 - Capability-aware admin state loaded through `/me/capabilities`.

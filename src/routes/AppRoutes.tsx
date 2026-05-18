@@ -21,6 +21,7 @@ import {
 	EditPagePage,
 	PageDetailPage,
 	ChatPage,
+	UserChatPage,
 	SettingsPage,
 	RegistrationInvitesPage,
 } from './lazyAdminPages';
@@ -40,6 +41,7 @@ export function AppRoutes() {
 		faces: facesPaths,
 		moderation: moderationPaths,
 		chat: chatPaths,
+		userChat: userChatPaths,
 		settings: settingsPaths,
 		registrationInvites: registrationInvitesPaths,
 	} = useAdminRoutePaths();
@@ -241,6 +243,16 @@ export function AppRoutes() {
 							path={path}
 							element={
 								<ProtectedRoute redirectTo="login">{withLayout(<ChatPage />)}</ProtectedRoute>
+							}
+						/>
+					))}
+
+					{userChatPaths.map((path) => (
+						<Route
+							key={path}
+							path={path}
+							element={
+								<ProtectedRoute redirectTo="login">{withLayout(<UserChatPage />)}</ProtectedRoute>
 							}
 						/>
 					))}

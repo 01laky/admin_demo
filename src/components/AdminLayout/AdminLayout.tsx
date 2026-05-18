@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLocalizedLink } from '@/hooks/useLocalizedLink';
 import { isSuperAdminFromToken } from '@/utils/contentModeration';
+import { useOperatorUserChatConversations } from '@/hooks/api/useOperatorUserChatApi';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { useConfirmModal } from '@/hooks/useConfirmModal';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -36,6 +37,7 @@ const NAV_ITEMS: NavItem[] = [
 
 const SUPER_ADMIN_NAV_ITEMS: NavItem[] = [
 	{ path: '/moderation', labelKey: 'pages.moderation.title', icon: '🛡' },
+	{ path: '/user-chat', labelKey: 'pages.userChat.title', icon: '📩' },
 ];
 
 const DESKTOP_BREAKPOINT = 1024;
@@ -54,9 +56,13 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 	const getLocalizedPath = useLocalizedLink();
 	const { confirm, ConfirmModalHost } = useConfirmModal();
 	const reduceMotion = useReducedMotion();
-	const navItems = isSuperAdminFromToken(token)
-		? [...NAV_ITEMS, ...SUPER_ADMIN_NAV_ITEMS]
-		: NAV_ITEMS;
+	const isSuperAdmin = isSuperAdminFromToken(token);
+	const { data: userChatConversations = [] } = useOperatorUserChatConversations();
+	const userChatUnread = isSuperAdmin
+		? userChatConversations.reduce((sum, c) => sum + c.unreadCount, 0)
+		: 0;
+
+	const navItems = isSuperAdmin ? [...NAV_ITEMS, ...SUPER_ADMIN_NAV_ITEMS] : NAV_ITEMS;
 
 	// Detect screen size
 	const handleResize = useCallback(() => {
@@ -226,7 +232,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 								className={`admin-sidebar__item ${isActive ? 'admin-sidebar__item--active' : ''}`}
 							>
 								<span className="admin-sidebar__icon">{item.icon}</span>
-								<span className="admin-sidebar__label">{t(item.labelKey)}</span>
+								<span className="admin-sidebar__label">
+									{t(item.labelKey)}
+									{item.path === '/user-chat' && userChatUnread > 0 ? ` (${userChatUnread})` : ''}
+								</span>
 							</Link>
 						);
 					})}

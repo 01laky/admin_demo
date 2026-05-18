@@ -1,5 +1,18 @@
 import type { SupportedLanguage } from '../i18n/config';
 
+/**
+ * Internal route ids (see useAdminRoutePaths) → canonical URL slug.
+ * React Router registers slugs from getAllRouteTranslations; menu links use kebab-case paths.
+ */
+const ROUTE_ID_TO_SLUG: Record<string, string> = {
+	userChat: 'user-chat',
+	registrationInvites: 'registration-invites',
+};
+
+function resolveRouteSlug(routeIdOrSlug: string): string {
+	return ROUTE_ID_TO_SLUG[routeIdOrSlug] ?? routeIdOrSlug;
+}
+
 // Map of English route names to their keys in i18n
 const routeKeys: Record<string, string> = {
 	login: 'routes.login',
@@ -9,8 +22,11 @@ const routeKeys: Record<string, string> = {
 	faces: 'routes.faces',
 	moderation: 'routes.moderation',
 	chat: 'routes.chat',
+	userChat: 'routes.userChat',
+	'user-chat': 'routes.userChat',
 	settings: 'routes.settings',
 	registrationInvites: 'routes.registrationInvites',
+	'registration-invites': 'routes.registrationInvites',
 };
 
 // Map of route keys to English route names (reverse lookup)
@@ -22,8 +38,9 @@ const routeKeyToEnglish: Record<string, string> = {
 	'routes.faces': 'faces',
 	'routes.moderation': 'moderation',
 	'routes.chat': 'chat',
+	'routes.userChat': 'user-chat',
 	'routes.settings': 'settings',
-	'routes.registrationInvites': 'registrationInvites',
+	'routes.registrationInvites': 'registration-invites',
 };
 
 /**
@@ -109,18 +126,19 @@ export function getAllRouteTranslations(
 	englishRoute: string,
 	t: (key: string, options?: { lng?: string }) => string
 ): string[] {
-	const routeKey = routeKeys[englishRoute];
+	const slug = resolveRouteSlug(englishRoute);
+	const routeKey = routeKeys[englishRoute] ?? routeKeys[slug];
 	if (!routeKey) {
-		return [englishRoute];
+		return [slug];
 	}
 
-	const translations: string[] = [englishRoute]; // Always include English
+	const translations: string[] = [slug]; // Canonical English slug for React Router
 
 	// Get translations for all supported languages
 	const supportedLanguages: SupportedLanguage[] = ['en', 'sk', 'cz'];
 	supportedLanguages.forEach((lang) => {
 		const translated = t(routeKey, { lng: lang });
-		if (translated !== englishRoute) {
+		if (translated !== slug && !translations.includes(translated)) {
 			translations.push(translated);
 		}
 	});
