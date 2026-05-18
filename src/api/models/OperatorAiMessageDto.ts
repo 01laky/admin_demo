@@ -8,6 +8,8 @@ export type OperatorAiMessageDto = {
     content?: string | null;
     statsMode?: string | null;
     createdByUserId?: string | null;
+    authorEmail?: string | null;
+    responseLocale?: string | null;
     createdAt?: string;
 };
 

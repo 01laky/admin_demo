@@ -6,6 +6,9 @@ export interface UiChatMessage {
 	id: number;
 	role: UiChatRole;
 	content: string;
+	authorEmail?: string | null;
+	responseLocale?: string | null;
+	createdAt?: string | null;
 }
 
 /** Short label for admin UI (e.g. org/model-Instruct-2507 → model, qwen2.5:7b-instruct-q4_K_M → qwen2.5:7b). */
@@ -56,7 +59,13 @@ export function isTransientAiStatusContent(content: string): boolean {
 }
 
 /** Hub-only replies that are not persisted (errors, rate limits, model loading). */
-export function isOperatorAiEphemeralReply(content: string): boolean {
+export function isOperatorAiEphemeralReply(content: string, hubErrorCode?: string | null): boolean {
+	if (hubErrorCode) return true;
+	return isLegacyTransientAiStatusContent(content);
+}
+
+/** Pre–hub-error-code ephemeral detection (legacy persisted rows / old servers). */
+export function isLegacyTransientAiStatusContent(content: string): boolean {
 	if (isTransientAiStatusContent(content)) return true;
 	const c = content.toLowerCase();
 	return (

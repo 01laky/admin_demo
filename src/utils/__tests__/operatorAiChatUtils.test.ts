@@ -87,6 +87,11 @@ describe('operatorAiChatUtils', () => {
 		expect(isOperatorAiEphemeralReply('Ahoj, tu sú štatistiky.')).toBe(false);
 	});
 
+	it('isOperatorAiEphemeralReply true when hubErrorCode set', () => {
+		expect(isOperatorAiEphemeralReply('', 'invalid_locale')).toBe(true);
+		expect(isOperatorAiEphemeralReply('Real answer', null)).toBe(false);
+	});
+
 	it('appendExchangeToMessagesPage appends without duplicate user id', () => {
 		const user = {
 			id: 10,

@@ -33,6 +33,8 @@ import {
 	parseConversationIdFromSearch,
 	type UiChatMessage,
 } from '@/utils/operatorAiChatUtils';
+import { mapOperatorAiHubError } from '@/utils/operatorAiHubErrors';
+import { formatMessageHeader } from '@/utils/operatorAiLocale';
 import { Button } from '@/components/radix/Button';
 import { useConfirmModal } from '@/hooks/useConfirmModal';
 import './ChatPage.scss';
@@ -42,8 +44,8 @@ type ConnectionState = 'Connecting' | 'Connected' | 'Disconnected' | 'Reconnecti
 const SEND_TIMEOUT_MS = 360_000;
 
 export function ChatPage() {
-	const { t } = useTranslation('common');
-	const { token, isAuthenticated } = useAuth();
+	const { t, i18n } = useTranslation('common');
+	const { token, isAuthenticated, user } = useAuth();
 	const queryClient = useQueryClient();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const conversationId = parseConversationIdFromSearch(searchParams.toString());
@@ -181,25 +183,37 @@ export function ChatPage() {
 		connectionRef.current = connection;
 		let cancelled = false;
 
-		connection.on('ReceiveAiMessage', (userMessage: string, aiResponse: string) => {
-			const cid = conversationIdRef.current;
-			if (cid == null) return;
-			// Persisted turns are applied via OperatorAiMessageAppended + React Query cache.
-			// ReceiveAiMessage is only for non-persisted status/errors (model loading, rate limit, …).
-			if (!isOperatorAiEphemeralReply(aiResponse)) return;
+		connection.on(
+			'ReceiveAiMessage',
+			(userMessage: string, aiResponse: string, hubErrorCode?: string | null) => {
+				const cid = conversationIdRef.current;
+				if (cid == null) return;
+				// Persisted turns are applied via OperatorAiMessageAppended + React Query cache.
+				if (!isOperatorAiEphemeralReply(aiResponse, hubErrorCode)) return;
 
-			setPendingByConv((map) => ({
-				...map,
-				[cid]: [
-					{ id: -Date.now(), role: 'user', content: userMessage },
-					{ id: -Date.now() - 1, role: 'ai', content: aiResponse },
-				],
-			}));
-			void queryClientRef.current.invalidateQueries({
-				queryKey: operatorAiModelStatusQueryKey,
-			});
-			setIsSending(false);
-		});
+				const aiContent =
+					mapOperatorAiHubError(t, hubErrorCode) || aiResponse || t('pages.chat.errorGeneric');
+
+				setPendingByConv((map) => ({
+					...map,
+					[cid]: [
+						{
+							id: -Date.now(),
+							role: 'user',
+							content: userMessage,
+							authorEmail: user?.email,
+							responseLocale: i18n.language,
+							createdAt: new Date().toISOString(),
+						},
+						{ id: -Date.now() - 1, role: 'ai', content: aiContent },
+					],
+				}));
+				void queryClientRef.current.invalidateQueries({
+					queryKey: operatorAiModelStatusQueryKey,
+				});
+				setIsSending(false);
+			}
+		);
 
 		connection.on('OperatorAiMessageAppended', (evt: OperatorAiMessageAppendedEvent) => {
 			refreshConversationListRef.current(evt.conversation);
@@ -336,19 +350,26 @@ export function ChatPage() {
 
 		setInput('');
 		const optimisticUserId = -Date.now();
-		setPendingByConv((map) => ({
-			...map,
-			[conversationId]: [
-				...(map[conversationId] ?? []),
-				{ id: optimisticUserId, role: 'user', content: text },
-			],
-		}));
 		setSendingElapsedSec(0);
 		setIsSending(true);
 		const statsMode = getAdminAiPublicStatsMode();
+		const responseLocale = i18n.language;
+		setPendingByConv((map) => ({
+			...map,
+			[conversationId]: [
+				{
+					id: optimisticUserId,
+					role: 'user',
+					content: text,
+					authorEmail: user?.email,
+					responseLocale,
+					createdAt: new Date().toISOString(),
+				},
+			],
+		}));
 		try {
 			await Promise.race([
-				conn.invoke('SendToAiWithOperatorStats', conversationId, text, statsMode),
+				conn.invoke('SendToAiWithOperatorStats', conversationId, text, statsMode, responseLocale),
 				new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), SEND_TIMEOUT_MS)),
 			]);
 		} catch (err) {
@@ -516,9 +537,9 @@ export function ChatPage() {
 										key={msg.id}
 										className={`chat-page__message chat-page__message--${msg.role}`}
 									>
-										<span className="chat-page__message-label">
-											{msg.role === 'user' ? t('pages.chat.you') : t('pages.chat.ai')}
-										</span>
+										<div className="chat-page__message-header">
+											{formatMessageHeader(t, msg, i18n.language)}
+										</div>
 										<div className="chat-page__message-content">{msg.content}</div>
 									</div>
 								))}
