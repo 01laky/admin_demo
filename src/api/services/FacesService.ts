@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CreateFaceModel } from '../models/CreateFaceModel';
+import type { SetMyFaceRoleModel } from '../models/SetMyFaceRoleModel';
 import type { UpdateFaceModel } from '../models/UpdateFaceModel';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -32,6 +33,81 @@ export class FacesService {
             url: '/api/Faces',
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getApiFacesConfig(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Faces/config',
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getApiFacesFaceRoles(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Faces/face-roles',
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static putApiFacesMyRole({
+        id,
+        requestBody,
+    }: {
+        id: number,
+        requestBody?: SetMyFaceRoleModel,
+    }): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/Faces/{id}/my-role',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static postApiFacesVisit({
+        id,
+    }: {
+        id: number,
+    }): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/Faces/{id}/visit',
+            path: {
+                'id': id,
+            },
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static postApiFacesExitFace({
+        id,
+    }: {
+        id: number,
+    }): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/Faces/{id}/exit-face',
+            path: {
+                'id': id,
+            },
         });
     }
     /**

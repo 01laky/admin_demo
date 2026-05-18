@@ -11,7 +11,11 @@ import {
 import { Button } from '@/components/radix/Button';
 import { useLocalizedLink } from '@/hooks/useLocalizedLink';
 import { useConfirmModal } from '@/hooks/useConfirmModal';
-import { isBanReasonValid } from '@/utils/operatorModerationUtils';
+import {
+	canSubmitFaceBan,
+	canSubmitGlobalBan,
+	getFaceStatusI18nKey,
+} from '@/utils/operatorUserDetailUi';
 import './UserDetailPage.scss';
 
 function mutationErrorMessage(error: unknown): string {
@@ -75,7 +79,7 @@ export function UserDetailPage() {
 
 	const handleFaceBan = async (faceId: number) => {
 		const reason = faceBanReasonById[faceId] ?? '';
-		if (!isBanReasonValid(reason)) {
+		if (!canSubmitFaceBan(reason)) {
 			toast.error(t('pages.userDetail.banReasonInvalid'));
 			return;
 		}
@@ -273,7 +277,7 @@ export function UserDetailPage() {
 								<Button
 									variant="outline"
 									onClick={handleGlobalBan}
-									disabled={globalBan.isPending || !isBanReasonValid(globalBanReason)}
+									disabled={globalBan.isPending || !canSubmitGlobalBan(globalBanReason)}
 								>
 									{t('pages.userDetail.globalBan')}
 								</Button>
@@ -321,17 +325,18 @@ export function UserDetailPage() {
 													<span className="user-detail-role-current">{face.roleName}</span>
 												</td>
 												<td>
-													{face.isFaceBanned ? (
-														<span className="user-detail-badge user-detail-badge--danger">
-															{t('pages.userDetail.faceBanned')}
-														</span>
-													) : face.isActiveParticipant ? (
-														<span className="user-detail-badge user-detail-badge--ok">
-															{t('pages.userDetail.faceActive')}
-														</span>
-													) : (
-														'—'
-													)}
+													{(() => {
+														const statusKey = getFaceStatusI18nKey(face);
+														return statusKey ? (
+															<span
+																className={`user-detail-badge ${face.isFaceBanned ? 'user-detail-badge--danger' : 'user-detail-badge--ok'}`}
+															>
+																{t(statusKey)}
+															</span>
+														) : (
+															'—'
+														);
+													})()}
 												</td>
 												<td>
 													{face.isFaceBanned ? (
@@ -361,7 +366,7 @@ export function UserDetailPage() {
 																onClick={() => handleFaceBan(face.faceId)}
 																disabled={
 																	faceBan.isPending ||
-																	!isBanReasonValid(faceBanReasonById[face.faceId] ?? '')
+																	!canSubmitFaceBan(faceBanReasonById[face.faceId])
 																}
 															>
 																{t('pages.userDetail.faceBan')}

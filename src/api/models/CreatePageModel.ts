@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type CreatePageModel = {
-    faceId: number;
-    pageTypeId: number;
-    name: string;
+    faceId?: number;
+    pageTypeId?: number;
+    name?: string | null;
     description?: string | null;
-    path: string;
+    path?: string | null;
     index?: number;
 };
 

@@ -12,10 +12,26 @@ export class UsersService {
      * @returns any OK
      * @throws ApiError
      */
-    public static getApiUsers(): CancelablePromise<any> {
+    public static getApiUsers({
+        page,
+        pageSize,
+        search,
+        forAddFriend,
+    }: {
+        page?: number,
+        pageSize?: number,
+        search?: string,
+        forAddFriend?: boolean,
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/Users',
+            query: {
+                'Page': page,
+                'PageSize': pageSize,
+                'Search': search,
+                'ForAddFriend': forAddFriend,
+            },
         });
     }
     /**

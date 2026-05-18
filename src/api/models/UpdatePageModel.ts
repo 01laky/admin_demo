@@ -9,5 +9,6 @@ export type UpdatePageModel = {
     description?: string | null;
     path?: string | null;
     index?: number | null;
+    gridSchema?: string | null;
 };
 

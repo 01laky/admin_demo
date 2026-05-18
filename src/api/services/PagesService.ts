@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CreatePageModel } from '../models/CreatePageModel';
+import type { PageRouteTranslationModel } from '../models/PageRouteTranslationModel';
 import type { UpdatePageModel } from '../models/UpdatePageModel';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -21,7 +22,7 @@ export class PagesService {
             method: 'GET',
             url: '/api/Pages',
             query: {
-                'faceId': faceId,
+                'FaceId': faceId,
             },
         });
     }
@@ -94,6 +95,44 @@ export class PagesService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static getApiPagesTranslations({
+        pageId,
+    }: {
+        pageId: number,
+    }): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/Pages/{pageId}/translations',
+            path: {
+                'pageId': pageId,
+            },
+        });
+    }
+    /**
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static putApiPagesTranslations({
+        pageId,
+        requestBody,
+    }: {
+        pageId: number,
+        requestBody?: Array<PageRouteTranslationModel>,
+    }): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/Pages/{pageId}/translations',
+            path: {
+                'pageId': pageId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 }

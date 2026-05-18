@@ -77,7 +77,7 @@ flowchart LR
     admin --> auth["ProtectedRoute<br/>OAuth2 / JWT"]
     auth --> caps["/me/capabilities<br/>role + permission state"]
 
-    admin --> users["Users<br/>CRUD + detail/edit"]
+    admin --> users["Users<br/>list + operator detail"]
     admin --> faces["Faces<br/>community spaces"]
     admin --> moderation["Moderation<br/>SUPER_ADMIN queue"]
     admin --> pageTypes["Page Types<br/>page classification"]
@@ -325,7 +325,7 @@ This updates the API client in `src/api/` based on the backend API schema.
 - **Users** (`/users`) - User list and management
   - `Create User` - Create new user form
   - `Edit User` - Edit existing user form
-  - `User Detail` - View user details
+  - `User Detail` — **SUPER_ADMIN** operator console (read-only identity, badges, per-face `userRoleId`, bans with required reason, platform messenger DM). `/users/:id/edit` redirects here. API client: `src/api/operatorUsersApiClient.ts` (paths under `/api/operator-users/...`).
 - **Faces** (`/faces`) - Face list and management
   - Similar CRUD pages as Users
 - **Pages** (`/pages`) - Page list and management

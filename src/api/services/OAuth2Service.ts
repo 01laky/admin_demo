@@ -25,6 +25,7 @@ export class OAuth2Service {
         });
     }
     /**
+     * @deprecated
      * @returns any OK
      * @throws ApiError
      */

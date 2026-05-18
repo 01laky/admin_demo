@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __request } from '../../api/core/request';
 import { OpenAPI } from '../../api/core/OpenAPI';
+import {
+	fetchOperatorUserDetail,
+	postOperatorGlobalBan,
+	patchOperatorFaceRole,
+	postOperatorPlatformMessage,
+} from '../../api/operatorUsersApiClient';
 
 export interface OperatorUserFaceRow {
 	faceId: number;
@@ -38,14 +44,7 @@ const operatorUserDetailKey = (id: string) => ['operator-user-detail', id] as co
 export function useOperatorUserDetail(userId: string) {
 	return useQuery({
 		queryKey: operatorUserDetailKey(userId),
-		queryFn: async () => {
-			const response = await __request(OpenAPI, {
-				method: 'GET',
-				url: '/api/operator-users/users/{id}/detail',
-				path: { id: userId },
-			});
-			return response as OperatorUserDetail;
-		},
+		queryFn: async () => (await fetchOperatorUserDetail(userId)) as OperatorUserDetail,
 		enabled: !!userId,
 	});
 }
@@ -71,13 +70,7 @@ export function useOperatorUserMutations(userId: string) {
 		queryClient.invalidateQueries({ queryKey: operatorUserDetailKey(userId) });
 
 	const globalBan = useMutation({
-		mutationFn: (reason: string) =>
-			__request(OpenAPI, {
-				method: 'POST',
-				url: '/api/operator-users/users/{id}/global-ban',
-				path: { id: userId },
-				body: { reason },
-			}),
+		mutationFn: (reason: string) => postOperatorGlobalBan(userId, reason),
 		onSuccess: invalidate,
 	});
 
@@ -114,23 +107,12 @@ export function useOperatorUserMutations(userId: string) {
 
 	const setFaceRole = useMutation({
 		mutationFn: ({ faceId, userRoleId }: { faceId: number; userRoleId: number }) =>
-			__request(OpenAPI, {
-				method: 'PATCH',
-				url: '/api/operator-users/users/{id}/faces/{faceId}/role',
-				path: { id: userId, faceId },
-				body: { userRoleId },
-			}),
+			patchOperatorFaceRole(userId, faceId, userRoleId),
 		onSuccess: invalidate,
 	});
 
 	const sendMessage = useMutation({
-		mutationFn: (content: string) =>
-			__request(OpenAPI, {
-				method: 'POST',
-				url: '/api/operator-users/users/{id}/platform-messages',
-				path: { id: userId },
-				body: { content },
-			}),
+		mutationFn: (content: string) => postOperatorPlatformMessage(userId, content),
 	});
 
 	return { globalBan, globalUnban, faceBan, faceUnban, setFaceRole, sendMessage };
