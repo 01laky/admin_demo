@@ -41,7 +41,7 @@ export function UserDetailPage() {
 	const [platformMessage, setPlatformMessage] = useState('');
 
 	const handleGlobalBan = async () => {
-		if (!isBanReasonValid(globalBanReason)) {
+		if (!canSubmitGlobalBan(globalBanReason)) {
 			toast.error(t('pages.userDetail.banReasonInvalid'));
 			return;
 		}
@@ -180,7 +180,7 @@ export function UserDetailPage() {
 
 	return (
 		<div className="user-detail-page-wrapper" style={{ padding: '2rem' }}>
-			<ConfirmModalHost />
+			{ConfirmModalHost}
 			<Container fluid>
 				<div className="user-detail-content">
 					<div className="user-detail-header">
