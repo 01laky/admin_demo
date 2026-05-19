@@ -58,14 +58,28 @@ export interface AdminWallTicketDetail {
   comments: AdminWallTicketComment[];
 }
 
+export interface AdminWallTicketCreateBody {
+  title: string;
+  description: string;
+}
+
+export interface AdminWallTicketCreateResult {
+  id: number;
+  title: string;
+  status: string;
+  createdAt: string;
+}
+
 export async function adminListWallTickets(
   token: string,
   faceId: number,
   page = 1,
-  pageSize = 20
+  pageSize = 20,
+  status?: string
 ): Promise<AdminWallTicketListResponse> {
+  const statusQ = status ? `&status=${encodeURIComponent(status)}` : '';
   const res = await authFetch(
-    `/api/admin/faces/${faceId}/wall-tickets?page=${page}&pageSize=${pageSize}`,
+    `/api/admin/faces/${faceId}/wall-tickets?page=${page}&pageSize=${pageSize}${statusQ}`,
     token
   );
   if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
@@ -101,6 +115,37 @@ export async function adminDeleteWallTicket(token: string, faceId: number, ticke
     method: 'DELETE',
   });
   if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
+}
+
+export async function adminCreateWallTicket(
+  token: string,
+  faceId: number,
+  body: AdminWallTicketCreateBody
+): Promise<AdminWallTicketCreateResult> {
+  const res = await authFetch(`/api/admin/faces/${faceId}/wall-tickets`, token, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
+  return res.json() as Promise<AdminWallTicketCreateResult>;
+}
+
+export async function adminPostWallTicketComment(
+  token: string,
+  faceId: number,
+  ticketId: number,
+  content: string
+): Promise<AdminWallTicketComment> {
+  const res = await authFetch(
+    `/api/admin/faces/${faceId}/wall-tickets/${ticketId}/comments`,
+    token,
+    {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    }
+  );
+  if (!res.ok) throw new Error(await getApiErrorMessage(res, REQ_FAILED));
+  return res.json() as Promise<AdminWallTicketComment>;
 }
 
 export async function adminDeleteWallTicketComment(
